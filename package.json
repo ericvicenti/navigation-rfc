@@ -1,0 +1,11 @@
+{
+  "name": "nav-rfc",
+  "version": "0.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "fbjs": "^0.5.1",
+    "immutable": "^3.7.6",
+    "react-native": "ericvicenti/react-native#2015-10-08-xde",
+    "tinycolor": "0.0.1"
+  }
+}
