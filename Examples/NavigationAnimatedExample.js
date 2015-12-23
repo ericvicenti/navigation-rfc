@@ -21,6 +21,13 @@ class NavigationAnimatedExample extends React.Component {
         renderNavigator={(stack, onNavigation) => (
           <Navigation.AnimatedStackView
             stack={stack}
+            style={{flex: 1}}
+            renderOverlay={(props) => (
+              <Navigation.HeaderView
+                {...props}
+                getTitle={route => route}
+              />
+            )}
             renderRoute={(props) => (
               <Navigation.CardView
                 {...props }>

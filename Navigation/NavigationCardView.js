@@ -13,6 +13,7 @@ var NavigationContainer = require('./NavigationContainer');
 var {
   Animated,
   PanResponder,
+  View,
 } = React;
 
 class NavigationCardView extends React.Component {
@@ -70,9 +71,12 @@ class NavigationCardView extends React.Component {
       <Animated.View
         {...this._responder.panHandlers}
         style={{
-          flex: 1,
-          backgroundColor: 'blue',
-          paddingTop: 30,
+          backgroundColor: '#E9E9EF',
+          shadowColor: 'black',
+          shadowOpacity: 0.4,
+          shadowOffset: {width: 0, height: 0},
+          shadowRadius: 10,
+          paddingTop: 64,
           top: 0,
           bottom: 0,
           right: gestureValue,
@@ -80,7 +84,6 @@ class NavigationCardView extends React.Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
           }),
-          borderWidth: 2,
           position: 'absolute',
         }}>
         {this.props.children}
