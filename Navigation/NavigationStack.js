@@ -1,5 +1,10 @@
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule NavigationStack
  * @flow
@@ -11,7 +16,7 @@ var invariant = require('fbjs/lib/invariant');
 
 type IterationCallback = (route: any, index: number, key: string) => void;
 
-var {List, Set} = immutable;
+var {List, Set, Record} = immutable;
 
 function isRouteEmpty(route: any): boolean {
   return (route === undefined || route === null || route === '') || false;
@@ -32,7 +37,7 @@ class RouteNode {
   }
 }
 
-var StackDiffRecord = immutable.Record({
+var StackDiffRecord = Record({
   key: null,
   route: null,
   index: null,
@@ -46,7 +51,7 @@ class NavigationStack {
 
   _routeNodes: List<RouteNode>;
 
-  constructor(routeArray: Array<any>, index: number = 0) {
+  constructor(routeArray: Array<any>, index: number) {
     let routeNodes: List;
 
     // Internally, NavigationStack uses an immutable `List` to keep track of routes.
@@ -121,6 +126,17 @@ class NavigationStack {
     return index > -1 ?
       this._routeNodes.get(index).key :
       null;
+  }
+
+  find(
+    predicate: (value?: any, key?: number) => boolean,
+    context?: any,
+  ): any {
+    const result = this._routeNodes.find(
+      (routeNode) => predicate(routeNode.value),
+      context
+    );
+    return result ? result.value : result;
   }
 
   indexOf(route: any): number {
@@ -211,7 +227,7 @@ class NavigationStack {
     );
 
     var routeNodes = this._routeNodes.set(index, new RouteNode(route));
-    return this._update(routeNodes, index);
+    return this._update(routeNodes, this._index);
   }
 
   // Iterations

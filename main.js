@@ -5,8 +5,10 @@ const {
   AppRegistry,
 } = React;
 
-// const MainApp = require('./Examples/NavigationBasicExample');
-// const MainApp = require('./Examples/NavigationContainerExample');
-const MainApp = require('./Examples/NavigationAnimatedExample');
+React.Navigation = require('Navigation');
+React.NavigationCard = require('NavigationCard');
+React.NavigationHeader = require('NavigationHeader');
+
+const MainApp = require('./Examples/NavigationExample');
 
 AppRegistry.registerComponent('main', () => MainApp);

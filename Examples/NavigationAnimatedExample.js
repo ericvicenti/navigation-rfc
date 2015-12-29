@@ -1,15 +1,23 @@
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * The examples provided by Facebook are for non-commercial testing and
+ * evaluation purposes only.
  *
- * @providesModule NavigationAnimatedExample
- * @flow
- */
+ * Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 'use strict';
 
 var React = require('react-native');
-var Navigation = require('../Navigation');
 var {
-  View,
+  Navigation,
+  NavigationCard,
+  NavigationHeader,
   Text,
 } = React;
 
@@ -20,21 +28,24 @@ class NavigationAnimatedExample extends React.Component {
         initialStack={new Navigation.Stack([ 'First Route' ], 0)}
         renderNavigator={(stack, onNavigation) => (
           <Navigation.AnimatedStackView
-            stack={stack}
+            navigationStack={stack}
             style={{flex: 1}}
             renderOverlay={(props) => (
-              <Navigation.HeaderView
+              <NavigationHeader
                 {...props}
                 getTitle={route => route}
               />
             )}
-            renderRoute={(props) => (
-              <Navigation.CardView
-                {...props }>
+            renderScene={(props) => (
+              <NavigationCard
+                horizontal={true}
+                {...props}>
+                <Text>{stack.get(stack.index)}</Text>
                 <Text onPress={() => {
                   onNavigation(new Navigation.Action.Push('Another Route'));
                 }}>Push!</Text>
-              </Navigation.CardView>
+                <Text onPress={this.props.onExampleExit}>Exit Basic Nav Example</Text>
+              </NavigationCard>
             )}
           />
         )}
