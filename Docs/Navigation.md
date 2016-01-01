@@ -5,13 +5,26 @@ There are many ways to handle navigation in React Native. This document goes ove
 ## Navigation
 We tentatively support adoption of the new navigation API because it allows developers to easily reason about the navigation of their app. It enables mixed use of native and JS navigation views, and greatly increases the customizability of JS driven animations and gestures.
 
-### Control Flow and Navigation Stacks
+### Navigation Stacks
+The entire navigation state of your app can be modeled with NavigationStacks. A `NavigationStack` is a list of arbitrary routes and an index:
+
+```
+new NavigationStack(
+  routes: [
+    'string route',
+    {or: 'object route'},
+  ],
+  index: 1,
+);
+```
 
 ### Actions and Reducers
-The entire navigation state of your app can be modeled with NavigationStacks. NavigationActions allow your app to request changes in the navigation stacks, to be handled with NavigationReducer.
+A reducer is a function that returns a new state based on a previous state and an action that you are taking on it. A navigation reducer is simply a reducer that can transform the NavigationStack that is used to model your nav state.
+
+Navigation comes with a default set of actions and a reducer called [NavigationActions](2_Reducer_Actions.md) and [NavigationReducer](2_Reducer_Actions.md). NavigationActions allow your app to request changes in the navigation stacks, to be handled with NavigationReducer.
 
 ### Animations
-NavigationAnimatedStackView is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
+[NavigationAnimatedStackView](4_AnimatedStackView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
 
 NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedStackView, which should look similar to platform conventions.
 
