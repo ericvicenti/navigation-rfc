@@ -18,6 +18,7 @@ var React = require('react-native');
 class NavigationRootContainer extends React.Component {
   constructor(props: Object) {
     super(props);
+    console.log('evv- wat')
     this.state = {
       stack: this.props.initialStack,
     };
