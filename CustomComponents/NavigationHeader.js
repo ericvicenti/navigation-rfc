@@ -29,8 +29,10 @@
 var React = require('react-native');
 var {
   Animated,
-  Navigation,
   Image,
+  NavigationReducer,
+  NavigationStack,
+  NavigationContainer,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -89,15 +91,15 @@ class NavigationHeader extends React.Component {
     );
   }
   _handleBackPress() {
-    this.props.onNavigation( new Navigation.Action.Pop());
+    this.props.onNavigation( new NavigationReducer.Actions.Pop());
   }
 }
 NavigationHeader.propTypes = {
-  navigationStack: React.PropTypes.instanceOf(Navigation.Stack),
+  navigationStack: React.PropTypes.instanceOf(NavigationStack),
   onNavigation: React.PropTypes.func.isRequired,
   getTitle: React.PropTypes.func.isRequired,
 };
-NavigationHeader = Navigation.Container(NavigationHeader);
+NavigationHeader = NavigationContainer.create(NavigationHeader);
 
 var styles = StyleSheet.create({
   title: {

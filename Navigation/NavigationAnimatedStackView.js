@@ -14,13 +14,13 @@
 var NavigationStack = require('./NavigationStack');
 var NavigationContainer = require('./NavigationContainer');
 var React = require('react-native');
-
-var immutable = require('immutable');
-
 var {
   Animated,
   View,
 } = React;
+
+var immutable = require('immutable');
+
 var {
   Map,
   Record,
@@ -215,7 +215,7 @@ NavigationAnimatedStackView.propTypes = {
   navigationStack: React.PropTypes.instanceOf(NavigationStack).isRequired,
   renderScene: React.PropTypes.func.isRequired,
 };
-NavigationAnimatedStackView = NavigationContainer(NavigationAnimatedStackView);
+NavigationAnimatedStackView = NavigationContainer.create(NavigationAnimatedStackView);
 NavigationAnimatedStackView.NavigationSceneRecord = NavigationSceneRecord;
 
 module.exports = NavigationAnimatedStackView;

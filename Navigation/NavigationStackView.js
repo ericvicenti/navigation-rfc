@@ -11,8 +11,8 @@
  */
 'use strict';
 
-var NavigationContainer = require('./NavigationContainer');
 var React = require('react-native');
+var NavigationContainer = require('./NavigationContainer');
 var {
   StyleSheet,
   View,
@@ -43,7 +43,7 @@ var NavigationStackView = React.createClass({
   },
 });
 
-NavigationStackView = NavigationContainer(NavigationStackView);
+NavigationStackView = NavigationContainer.create(NavigationStackView);
 
 var styles = StyleSheet.create({
   stack: {

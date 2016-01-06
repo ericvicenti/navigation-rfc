@@ -15,9 +15,14 @@
 
 var React = require('react-native');
 var {
-  Navigation,
+  NavigationActions,
+  NavigationAnimatedStackView,
   NavigationCard,
+  NavigationContainer,
   NavigationHeader,
+  NavigationReducer,
+  NavigationStack,
+  NavigationStackView,
   TabBarIOS,
   Text,
   View,
@@ -58,13 +63,14 @@ class ExampleTabRoute extends ExampleRoute {
   constructor(params = {}) {
     super();
     const {navigationStack} = params;
-    this._navigationStack = navigationStack || new Navigation.Stack([ new ExampleStarterRoute() ], 0);
+    this._navigationStack = navigationStack || new NavigationStack([ new ExampleStarterRoute() ], 0);
   }
   getNavigationStack() {
     return this._navigationStack;
   }
   setNavigationStack(navigationStack) {
-    return this.constructor({navigationStack});
+    var MyTabRouteClass = this.constructor;
+    return new MyTabRouteClass({navigationStack});
   }
 }
 
@@ -78,7 +84,7 @@ class ExampleSecondTabRoute extends ExampleTabRoute {
   constructor(params = {}) {
     super(params);
     const {navigationStack} = params;
-    this._navigationStack = navigationStack || new Navigation.Stack([ new ExampleSecondStarterRoute() ], 0);
+    this._navigationStack = navigationStack || new NavigationStack([ new ExampleSecondStarterRoute() ], 0);
   }
   getNavigationStack() {
     return this._navigationStack;
@@ -97,7 +103,7 @@ class ExampleThirdTabRoute extends ExampleTabRoute {
 class ExampleTabScreen extends React.Component {
   render() {
     return (
-      <Navigation.AnimatedStackView
+      <NavigationAnimatedStackView
         style={{flex: 1}}
         renderOverlay={(props) => (
           <NavigationHeader
@@ -121,12 +127,12 @@ class ExampleTabScreen extends React.Component {
         }}>Open page in 2nd tab</Text>
         <Text onPress={() => {
           this.props.onNavigation(new ExampleExitRoute());
-        }}>Exit Basic Nav Example</Text>
+        }}>Exit Composition Example</Text>
       </NavigationCard>
     );
   }
 }
-ExampleTabScreen = Navigation.Container(ExampleTabScreen);
+ExampleTabScreen = NavigationContainer.create(ExampleTabScreen);
 
 
 var TABS = [
@@ -134,7 +140,7 @@ var TABS = [
   new ExampleSecondTabRoute(),
   new ExampleThirdTabRoute(),
 ];
-var INITIAL_STACK = new Navigation.Stack(TABS, 0);
+var INITIAL_STACK = new NavigationStack(TABS, 0);
 
 function MyNavigationReducer(lastStack, action) {
   if (action instanceof ExampleRoute) {
@@ -165,18 +171,18 @@ function MyNavigationReducer(lastStack, action) {
     // return the new stack
     return stack;
   }
-  return Navigation.Reducer(lastStack, action);
+  return NavigationReducer(lastStack, action);
 }
 
 class NavigationCompositionExample extends React.Component {
   render() {
     return (
-      <Navigation.RootContainer
+      <NavigationContainer.RootContainer
         initialStack={INITIAL_STACK}
         reducer={MyNavigationReducer}
         renderNavigator={(stack, onNavigation) => (
           <View style={{flex:1}}>
-            <Navigation.StackView
+            <NavigationStackView
               navigationStack={stack}
               style={{flex: 1, marginBottom:49.5}}
               renderRoute={(route) => (
@@ -188,8 +194,8 @@ class NavigationCompositionExample extends React.Component {
                       this.props.onExampleExit();
                       return;
                     }
-                    if (action instanceof Navigation.Action.Abstract) {
-                      action = new Navigation.Action.OnRouteNavigationStack(route, action);
+                    if (action instanceof NavigationActions.Abstract) {
+                      action = new NavigationActions.OnRouteNavigationStack(route, action);
                     }
                     onNavigation(action);
                   }}
@@ -204,7 +210,7 @@ class NavigationCompositionExample extends React.Component {
                   key={key}
                   selected={index === stack.index}
                   onPress={() => {
-                    onNavigation(new Navigation.Action.JumpTo(route));
+                    onNavigation(new NavigationActions.JumpTo(route));
                   }}>
                   <View />
                 </TabBarIOS.Item>

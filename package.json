@@ -1,11 +1,9 @@
 {
-  "name": "nav-rfc",
+  "name": "navigation-rfc",
   "version": "0.0.0",
-  "main": "main.js",
   "dependencies": {
-    "fbjs": "^0.5.1",
     "immutable": "^3.7.6",
-    "react-native": "ericvicenti/react-native#2015-10-08-xde",
+    "react-native": "git+https://github.com/facebook/react-native#0.18-stable",
     "tinycolor": "0.0.1"
   }
 }

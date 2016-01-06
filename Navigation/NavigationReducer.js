@@ -11,11 +11,11 @@
  */
 'use strict';
 
-var NavigationAction = require('./NavigationAction');
+var NavigationActions = require('./NavigationActions');
 var NavigationStack = require('./NavigationStack');
 
-function NavigationReducer(stack: NavigationStack, action: NavigationAction.Abstract): NavigationStack {
-  if (action instanceof NavigationAction.OnRouteNavigationStack) {
+function NavigationReducer(stack: NavigationStack, action: NavigationActions.Abstract): NavigationStack {
+  if (action instanceof NavigationActions.OnRouteNavigationStack) {
     const route = action.getRoute();
     const routeIndex = stack.indexOf(route);
     if (routeIndex === -1) {
@@ -26,22 +26,24 @@ function NavigationReducer(stack: NavigationStack, action: NavigationAction.Abst
     const newRoute = route.setNavigationStack(newSubStack);
     return stack.replaceAtIndex(routeIndex, newRoute);
   }
-  if (action instanceof NavigationAction.Push) {
+  if (action instanceof NavigationActions.Push) {
     return stack.push(action.getRoute());
   }
-  if (action instanceof NavigationAction.Pop) {
+  if (action instanceof NavigationActions.Pop) {
     if (stack.size === 1) {
       return stack;
     }
     return stack.pop();
   }
-  if (action instanceof NavigationAction.JumpTo) {
+  if (action instanceof NavigationActions.JumpTo) {
     return stack.jumpToIndex(stack.indexOf(action.getRoute()));
   }
-  if (action instanceof NavigationAction.Reset) {
+  if (action instanceof NavigationActions.Reset) {
     return action.getStack();
   }
   return stack;
 }
+
+NavigationReducer.Actions = NavigationActions;
 
 module.exports = NavigationReducer;

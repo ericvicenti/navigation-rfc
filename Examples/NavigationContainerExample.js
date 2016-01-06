@@ -15,7 +15,10 @@
 
 var React = require('react-native');
 var {
-  Navigation,
+  NavigationActions,
+  NavigationReducer,
+  NavigationContainer,
+  NavigationStack,
   Text,
   View,
 } = React;
@@ -30,7 +33,7 @@ class InnerNavComponent extends React.Component {
           <Text
             key={tab}
             onPress={() => {
-              this.props.onNavigation(new Navigation.Action.JumpTo(tab));
+              this.props.onNavigation(new NavigationActions.JumpTo(tab));
             }}>
             Go to {tab}
           </Text>
@@ -39,7 +42,7 @@ class InnerNavComponent extends React.Component {
     );
   }
 }
-InnerNavComponent = Navigation.Container(InnerNavComponent);
+InnerNavComponent = NavigationContainer.create(InnerNavComponent);
 
 class MiddleComponent extends React.Component {
   render() {
@@ -53,9 +56,9 @@ var NavigationContainerExample = React.createClass({
   render: function() {
     var TABS = ['one', 'two', 'three'];
     return (
-      <Navigation.RootContainer
-        initialStack={new Navigation.Stack(TABS, 0)}
-        reducer={Navigation.Reducer}
+      <NavigationContainer.RootContainer
+        initialStack={new NavigationStack(TABS, 0)}
+        reducer={NavigationReducer}
         renderNavigator={() => (
           <View style={{flex:1, paddingTop: 30}}>
             <MiddleComponent />

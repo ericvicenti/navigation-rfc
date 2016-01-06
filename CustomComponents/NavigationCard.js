@@ -29,7 +29,9 @@
 var React = require('react-native');
 var {
   Animated,
-  Navigation,
+  NavigationActions,
+  NavigationStack,
+  NavigationContainer,
   PanResponder,
   StyleSheet,
   View,
@@ -63,7 +65,7 @@ class NavigationCard extends React.Component {
         const xRatio = dx / this._lastWidth;
         const doesPop = (xRatio + vx) > 0.45;
         if (doesPop) {
-          this.props.onNavigation(new Navigation.Action.Pop({ velocity: vx }));
+          this.props.onNavigation(new NavigationActions.Pop({ velocity: vx }));
           return;
         }
         Animated.spring(this.props.position, {
@@ -114,9 +116,9 @@ class NavigationCard extends React.Component {
   }
 }
 NavigationCard.propTypes = {
-  navigationStack: React.PropTypes.instanceOf(Navigation.Stack),
+  navigationStack: React.PropTypes.instanceOf(NavigationStack),
 };
-NavigationCard = Navigation.Container(NavigationCard);
+NavigationCard = NavigationContainer.create(NavigationCard);
 
 var styles = StyleSheet.create({
   card: {

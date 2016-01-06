@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule NavigationAction
+ * @providesModule NavigationActions
  * @flow
  */
 'use strict';
@@ -66,12 +66,12 @@ class NavigationOnRouteNavigationStackAction extends NavigationAbstractAction {
   }
 }
 
-var NavigationAction = {};
-NavigationAction.Abstract = NavigationAbstractAction;
-NavigationAction.Push = NavigationPushAction;
-NavigationAction.Pop = NavigationPopAction;
-NavigationAction.JumpTo = NavigationJumpToAction;
-NavigationAction.Reset = NavigationResetAction;
-NavigationAction.OnRouteNavigationStack = NavigationOnRouteNavigationStackAction;
+var NavigationActions = {};
+NavigationActions.Abstract = NavigationAbstractAction;
+NavigationActions.Push = NavigationPushAction;
+NavigationActions.Pop = NavigationPopAction;
+NavigationActions.JumpTo = NavigationJumpToAction;
+NavigationActions.Reset = NavigationResetAction;
+NavigationActions.OnRouteNavigationStack = NavigationOnRouteNavigationStackAction;
 
-module.exports = NavigationAction;
+module.exports = NavigationActions;

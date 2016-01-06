@@ -13,8 +13,9 @@
 
 var React = require('react-native');
 var NavigationStack = require('./NavigationStack');
+var NavigationRootContainer = require('./NavigationRootContainer');
 
-function NavigationContainer(Component: React.Component): React.Component {
+function createNavigationContainer(Component: React.Component): React.Component {
   class NavigationComponent extends React.Component {
     render() {
       return (
@@ -48,5 +49,11 @@ function NavigationContainer(Component: React.Component): React.Component {
   };
   return NavigationComponent;
 }
+
+var NavigationContainer = {
+  create: createNavigationContainer,
+  RootContainer: NavigationRootContainer,
+};
+
 
 module.exports = NavigationContainer;

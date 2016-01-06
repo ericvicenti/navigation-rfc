@@ -15,7 +15,9 @@
 
 var React = require('react-native');
 var {
-  Navigation,
+  NavigationContainer,
+  NavigationReducer,
+  NavigationStack,
   Text,
   View,
 } = React;
@@ -23,21 +25,21 @@ var {
 var NavigationBasicExample = React.createClass({
   render: function() {
     return (
-      <Navigation.RootContainer
-        initialStack={new Navigation.Stack(['first page'], 0)}
-        reducer={Navigation.Reducer}
+      <NavigationContainer.RootContainer
+        initialStack={new NavigationStack(['first page'], 0)}
+        reducer={NavigationReducer}
         renderNavigator={(stack, onNavigation) => (
           <View style={{flex:1, paddingTop: 30}}>
             <Text>Current page: {stack.get(stack.index)}</Text>
             <Text
               onPress={() => {
-                onNavigation(new Navigation.Action.Push('page #' + stack.size));
+                onNavigation(new NavigationReducer.Actions.Push('page #' + stack.size));
               }}>
               Push page #{stack.size}
             </Text>
             <Text
               onPress={() => {
-                onNavigation(new Navigation.Action.Pop());
+                onNavigation(new NavigationReducer.Actions.Pop());
               }}>
               Pop
             </Text>

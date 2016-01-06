@@ -14,15 +14,15 @@ jest
  .autoMockOff()
  .mock('ErrorUtils');
 
-var NavigationAction = require('NavigationAction');
+var NavigationActions = require('NavigationActions');
 var NavigationReducer = require('NavigationReducer');
 var NavigationStack = require('NavigationStack');
 
 describe('NavigationReducer', () => {
 
-  it('handles NavigationAction.Push', () => {
+  it('handles Push', () => {
     let stack = new NavigationStack(['a'], 0);
-    let action = new NavigationAction.Push('b');
+    let action = new NavigationActions.Push('b');
     stack = NavigationReducer(stack, action);
 
     expect(stack.get(0)).toBe('a');
@@ -31,40 +31,40 @@ describe('NavigationReducer', () => {
     expect(stack.index).toBe(1);
   });
 
-  it('handles NavigationAction.Pop', () => {
+  it('handles Pop', () => {
     let stack = new NavigationStack(['a', 'b'], 1);
-    let action = new NavigationAction.Pop();
+    let action = new NavigationActions.Pop();
     stack = NavigationReducer(stack, action);
 
     expect(stack.get(0)).toBe('a');
     expect(stack.size).toBe(1);
     expect(stack.index).toBe(0);
 
-    action = new NavigationAction.Pop();
+    action = new NavigationActions.Pop();
     stack = NavigationReducer(stack, action);
 
     expect(stack.size).toBe(1);
     expect(stack.index).toBe(0);
   });
 
-  it('handles NavigationAction.JumpTo', () => {
+  it('handles JumpTo', () => {
     let stack = new NavigationStack(['a', 'b', 'c'], 0);
-    let action = new NavigationAction.JumpTo('b');
+    let action = new NavigationActions.JumpTo('b');
     stack = NavigationReducer(stack, action);
 
     expect(stack.size).toBe(3);
     expect(stack.index).toBe(1);
 
-    action = new NavigationAction.JumpTo('c');
+    action = new NavigationActions.JumpTo('c');
     stack = NavigationReducer(stack, action);
 
     expect(stack.size).toBe(3);
     expect(stack.index).toBe(2);
   });
 
-  it('handles NavigationAction.Reset', () => {
+  it('handles Reset', () => {
     let stack = new NavigationStack(['a', 'b'], 0);
-    let action = new NavigationAction.Reset(new NavigationStack(['c', 'd'], 1));
+    let action = new NavigationActions.Reset(new NavigationStack(['c', 'd'], 1));
     stack = NavigationReducer(stack, action);
 
     expect(stack.get(0)).toBe('c');
@@ -74,7 +74,7 @@ describe('NavigationReducer', () => {
   });
 
 
-  it('handles NavigationAction.OnRouteNavigationStack Push', () => {
+  it('handles OnRouteNavigationStack Push', () => {
     function makeObjectRoute(navStack) {
       return {
         getNavigationStack: () => navStack,
@@ -91,7 +91,7 @@ describe('NavigationReducer', () => {
     let stack = new NavigationStack([route1, route2], 1);
 
     // this action should perform a push action on the sub-navigation stack of route1
-    let action = new NavigationAction.OnRouteNavigationStack(route1, new NavigationAction.Push('c'));
+    let action = new NavigationActions.OnRouteNavigationStack(route1, new NavigationActions.Push('c'));
     stack = NavigationReducer(stack, action);
 
     expect(stack.get(0).getNavigationStack().get(0)).toBe('a');
