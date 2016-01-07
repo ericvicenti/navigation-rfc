@@ -75,9 +75,9 @@ describe('NavigationReducer', () => {
 
 
   it('handles OnRouteNavigationState Push', () => {
-    function makeObjectRoute(navStack) {
+    function makeObjectRoute(navState) {
       return {
-        getNavigationState: () => navStack,
+        getNavigationState: () => navState,
         setNavigationState: makeObjectRoute,
       };
     }

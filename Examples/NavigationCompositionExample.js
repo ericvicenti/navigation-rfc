@@ -23,6 +23,7 @@ var {
   NavigationReducer,
   NavigationState,
   NavigationView,
+  StyleSheet,
   TabBarIOS,
   Text,
   View,
@@ -104,7 +105,7 @@ class ExampleTabScreen extends React.Component {
   render() {
     return (
       <NavigationAnimatedView
-        style={{flex: 1}}
+        style={styles.tabContent}
         renderOverlay={(props) => (
           <NavigationHeader
             {...props}
@@ -181,10 +182,10 @@ class NavigationCompositionExample extends React.Component {
         initialState={INITIAL_STACK}
         reducer={MyNavigationReducer}
         renderNavigator={(navState, onNavigation) => (
-          <View style={{flex:1}}>
+          <View style={styles.topView}>
             <NavigationView
               navigationState={navState}
-              style={{flex: 1, marginBottom:49.5}}
+              style={styles.tabsContent}
               renderRoute={(route) => (
                 <ExampleTabScreen
                   route={route}
@@ -202,7 +203,7 @@ class NavigationCompositionExample extends React.Component {
                 />
               )}
             />
-            <TabBarIOS style={{position: 'absolute', height:49.5, bottom:0,left:0,right:0}}>
+            <TabBarIOS style={styles.tabBar}>
               {navState.mapToArray((route, index, key) => (
                 <TabBarIOS.Item
                   title={route.getTabName && route.getTabName()}
@@ -222,5 +223,25 @@ class NavigationCompositionExample extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  topView: {
+    flex: 1,
+  },
+  tabsContent: {
+    flex: 1,
+    marginBottom: 49.5,
+  },
+  tabBar: {
+    position: 'absolute',
+    height: 49.5,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  tabContent: {
+    flex: 1,
+  },
+});
 
 module.exports = NavigationCompositionExample;

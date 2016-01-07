@@ -33,29 +33,29 @@ describe('NavigationState:', () => {
 
   // Basic
   it('gets index', () => {
-    var stack = new NavigationState(['a', 'b', 'c'], 1);
-    expect(stack.index).toBe(1);
+    var state = new NavigationState(['a', 'b', 'c'], 1);
+    expect(state.index).toBe(1);
   });
 
   it('gets size', () => {
-    var stack = new NavigationState(['a', 'b', 'c'], 1);
-    expect(stack.size).toBe(3);
+    var state = new NavigationState(['a', 'b', 'c'], 1);
+    expect(state.size).toBe(3);
   });
 
   it('gets route', () => {
-    var stack = new NavigationState(['a', 'b', 'c'], 0);
-    expect(stack.get(2)).toBe('c');
+    var state = new NavigationState(['a', 'b', 'c'], 0);
+    expect(state.get(2)).toBe('c');
   });
 
   it('converts to an array', () => {
-    var stack = new NavigationState(['a', 'b'], 0);
-    expect(stack.toArray()).toEqual(['a', 'b']);
+    var state = new NavigationState(['a', 'b'], 0);
+    expect(state.toArray()).toEqual(['a', 'b']);
   });
 
-  it('creates a new stack after mutation', () => {
-    var stack1 = new NavigationState(['a', 'b'], 0);
-    var stack2 = stack1.push('c');
-    expect(stack1).not.toBe(stack2);
+  it('creates a new state after mutation', () => {
+    var state1 = new NavigationState(['a', 'b'], 0);
+    var state2 = state1.push('c');
+    expect(state1).not.toBe(state2);
   });
 
   it('throws at index out of bound', () => {
@@ -69,16 +69,16 @@ describe('NavigationState:', () => {
   });
 
   it('finds index', () => {
-    var stack = new NavigationState(['a', 'b'], 0);
-    expect(stack.indexOf('b')).toBe(1);
-    expect(stack.indexOf('c')).toBe(-1);
+    var state = new NavigationState(['a', 'b'], 0);
+    expect(state.indexOf('b')).toBe(1);
+    expect(state.indexOf('c')).toBe(-1);
   });
 
   // Key
   it('gets key for route', () => {
     var test = (route) => {
-      var stack = new NavigationState(['a'], 0);
-      var key = stack.push(route).keyOf(route);
+      var state = new NavigationState(['a'], 0);
+      var key = state.push(route).keyOf(route);
       expect(typeof key).toBe('string');
       expect(!!key).toBe(true);
     };
@@ -89,8 +89,8 @@ describe('NavigationState:', () => {
   it('gets a key of larger value for route', () => {
     var lastKey = '';
     var test = (route) => {
-      var stack = new NavigationState(['a'], 0);
-      var key = stack.push(route).keyOf(route);
+      var state = new NavigationState(['a'], 0);
+      var key = state.push(route).keyOf(route);
       expect(key > lastKey).toBe(true);
       lastKey = key;
     };
@@ -99,12 +99,12 @@ describe('NavigationState:', () => {
   });
 
   it('gets an unique key for a different route', () => {
-    var stack = new NavigationState(['a'], 0);
+    var state = new NavigationState(['a'], 0);
     var keys = {};
 
     var test = (route) => {
-      stack = stack.push(route);
-      var key = stack.keyOf(route);
+      state = state.push(route);
+      var key = state.keyOf(route);
       expect(keys[key]).toBe(undefined);
       keys[key] = true;
     };
@@ -114,45 +114,45 @@ describe('NavigationState:', () => {
 
   it('gets the same unique key for the same route', () => {
     var test = (route) => {
-      var stack = new NavigationState([route], 0);
-      expect(stack.keyOf(route)).toBe(stack.keyOf(route));
+      var state = new NavigationState([route], 0);
+      expect(state.keyOf(route)).toBe(state.keyOf(route));
     };
 
     ROUTES.forEach(test);
   });
 
 
-  it('gets the same unique key form the derived stack', () => {
+  it('gets the same unique key form the derived state', () => {
     var test = (route) => {
-      var stack = new NavigationState([route], 0);
-      var derivedStack = stack.push('wow').pop().slice(0, 10).push('blah');
-      expect(derivedStack.keyOf(route)).toBe(stack.keyOf(route));
+      var state = new NavigationState([route], 0);
+      var derivedStack = state.push('wow').pop().slice(0, 10).push('blah');
+      expect(derivedStack.keyOf(route)).toBe(state.keyOf(route));
     };
 
     ROUTES.forEach(test);
   });
 
-  it('gets a different key from a different stack', () => {
+  it('gets a different key from a different state', () => {
     var test = (route) => {
-      var stack1 = new NavigationState([route], 0);
-      var stack2 = new NavigationState([route], 0);
-      expect(stack1.keyOf(route)).not.toBe(stack2.keyOf(route));
+      var state1 = new NavigationState([route], 0);
+      var state2 = new NavigationState([route], 0);
+      expect(state1.keyOf(route)).not.toBe(state2.keyOf(route));
     };
 
     ROUTES.forEach(test);
   });
 
   it('gets no key for a route that does not contains this route', () => {
-     var stack = new NavigationState(['a'], 0);
-     expect(stack.keyOf('b')).toBe(null);
+     var state = new NavigationState(['a'], 0);
+     expect(state.keyOf('b')).toBe(null);
   });
 
   it('gets a new key for a route that was removed and added again', () => {
     var test = (route) => {
-      var stack = new NavigationState(['a'], 0);
+      var state = new NavigationState(['a'], 0);
 
-      var key1 = stack.push(route).keyOf(route);
-      var key2 = stack.push(route).pop().push(route).keyOf(route);
+      var key1 = state.push(route).keyOf(route);
+      var key2 = state.push(route).pop().push(route).keyOf(route);
       expect(key1).not.toBe(key2);
     };
 
@@ -161,164 +161,164 @@ describe('NavigationState:', () => {
 
   // Slice
   it('slices', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c', 'd'], 1);
-    var stack2 = stack1.slice(1, 3);
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['b', 'c']);
+    var state1 = new NavigationState(['a', 'b', 'c', 'd'], 1);
+    var state2 = state1.slice(1, 3);
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['b', 'c']);
   });
 
   it('may update index after slicing', () => {
-    var stack = new NavigationState(['a', 'b', 'c'], 2);
-    expect(stack.slice().index).toBe(2);
-    expect(stack.slice(0, 1).index).toBe(0);
-    expect(stack.slice(0, 2).index).toBe(1);
-    expect(stack.slice(0, 3).index).toBe(2);
-    expect(stack.slice(0, 100).index).toBe(2);
-    expect(stack.slice(-2).index).toBe(1);
+    var state = new NavigationState(['a', 'b', 'c'], 2);
+    expect(state.slice().index).toBe(2);
+    expect(state.slice(0, 1).index).toBe(0);
+    expect(state.slice(0, 2).index).toBe(1);
+    expect(state.slice(0, 3).index).toBe(2);
+    expect(state.slice(0, 100).index).toBe(2);
+    expect(state.slice(-2).index).toBe(1);
   });
 
   it('slices without specifying params', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 1);
-    var stack2 = stack1.slice();
-    expect(stack2).toBe(stack1);
+    var state1 = new NavigationState(['a', 'b', 'c'], 1);
+    var state2 = state1.slice();
+    expect(state2).toBe(state1);
   });
 
   it('slices to from the end', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c', 'd'], 1);
-    var stack2 = stack1.slice(-2);
-    expect(stack2.toArray()).toEqual(['c', 'd']);
+    var state1 = new NavigationState(['a', 'b', 'c', 'd'], 1);
+    var state2 = state1.slice(-2);
+    expect(state2.toArray()).toEqual(['c', 'd']);
   });
 
   it('throws when slicing to empty', () => {
       expect(() => {
-        var stack = new NavigationState(['a', 'b'], 1);
-        stack.slice(100);
+        var state = new NavigationState(['a', 'b'], 1);
+        state.slice(100);
       }).toThrow();
   });
 
   // Push
   it('pushes route', () => {
-    var stack1 = new NavigationState(['a', 'b'], 1);
-    var stack2 = stack1.push('c');
+    var state1 = new NavigationState(['a', 'b'], 1);
+    var state2 = state1.push('c');
 
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['a', 'b', 'c']);
-    expect(stack2.index).toBe(2);
-    expect(stack2.size).toBe(3);
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['a', 'b', 'c']);
+    expect(state2.index).toBe(2);
+    expect(state2.size).toBe(3);
   });
 
   it('throws when pushing empty route', () => {
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.push(null);
+      var state = new NavigationState(['a', 'b'], 1);
+      state.push(null);
     }).toThrow();
 
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.push('');
+      var state = new NavigationState(['a', 'b'], 1);
+      state.push('');
     }).toThrow();
 
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.push(undefined);
+      var state = new NavigationState(['a', 'b'], 1);
+      state.push(undefined);
     }).toThrow();
   });
 
   it('replaces routes on push', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 1);
-    var stack2 = stack1.push('d');
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['a', 'b', 'd']);
-    expect(stack2.index).toBe(2);
+    var state1 = new NavigationState(['a', 'b', 'c'], 1);
+    var state2 = state1.push('d');
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['a', 'b', 'd']);
+    expect(state2.index).toBe(2);
   });
 
   // Pop
   it('pops route', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 2);
-    var stack2 = stack1.pop();
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['a', 'b']);
-    expect(stack2.index).toBe(1);
-    expect(stack2.size).toBe(2);
+    var state1 = new NavigationState(['a', 'b', 'c'], 2);
+    var state2 = state1.pop();
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['a', 'b']);
+    expect(state2.index).toBe(1);
+    expect(state2.size).toBe(2);
   });
 
   it('replaces routes on pop', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 1);
-    var stack2 = stack1.pop();
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['a']);
-    expect(stack2.index).toBe(0);
+    var state1 = new NavigationState(['a', 'b', 'c'], 1);
+    var state2 = state1.pop();
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['a']);
+    expect(state2.index).toBe(0);
   });
 
-  it('throws when popping to empty stack', () => {
+  it('throws when popping to empty state', () => {
     expect(() => {
-      var stack = new NavigationState(['a'], 0);
-      stack.pop();
+      var state = new NavigationState(['a'], 0);
+      state.pop();
     }).toThrow();
   });
 
   // Jump
   it('jumps to index', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 0);
-    var stack2 = stack1.jumpToIndex(2);
+    var state1 = new NavigationState(['a', 'b', 'c'], 0);
+    var state2 = state1.jumpToIndex(2);
 
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.index).toBe(2);
+    expect(state2).not.toBe(state1);
+    expect(state2.index).toBe(2);
   });
 
   it('throws then jumping to index out of bound', () => {
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.jumpToIndex(2);
+      var state = new NavigationState(['a', 'b'], 1);
+      state.jumpToIndex(2);
     }).toThrow();
 
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.jumpToIndex(-1);
+      var state = new NavigationState(['a', 'b'], 1);
+      state.jumpToIndex(-1);
     }).toThrow();
   });
 
   // Replace
   it('replaces route at index', () => {
-    var stack1 = new NavigationState(['a', 'b'], 1);
-    var stack2 = stack1.replaceAtIndex(0, 'x');
+    var state1 = new NavigationState(['a', 'b'], 1);
+    var state2 = state1.replaceAtIndex(0, 'x');
 
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['x', 'b']);
-    expect(stack2.index).toBe(1);
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['x', 'b']);
+    expect(state2.index).toBe(1);
   });
 
   it('replaces route at negative index', () => {
-    var stack1 = new NavigationState(['a', 'b'], 1);
-    var stack2 = stack1.replaceAtIndex(-1, 'x');
+    var state1 = new NavigationState(['a', 'b'], 1);
+    var state2 = state1.replaceAtIndex(-1, 'x');
 
-    expect(stack2).not.toBe(stack1);
-    expect(stack2.toArray()).toEqual(['a', 'x']);
-    expect(stack2.index).toBe(1);
+    expect(state2).not.toBe(state1);
+    expect(state2.toArray()).toEqual(['a', 'x']);
+    expect(state2.index).toBe(1);
   });
 
   it('throws when replacing empty route', () => {
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.replaceAtIndex(1, null);
+      var state = new NavigationState(['a', 'b'], 1);
+      state.replaceAtIndex(1, null);
     }).toThrow();
   });
 
   it('throws when replacing at index out of bound', () => {
     expect(() => {
-      var stack = new NavigationState(['a', 'b'], 1);
-      stack.replaceAtIndex(100, 'x');
+      var state = new NavigationState(['a', 'b'], 1);
+      state.replaceAtIndex(100, 'x');
     }).toThrow();
   });
 
   // Iteration
   it('iterates each item', () => {
-    var stack = new NavigationState(['a', 'b'], 0);
+    var state = new NavigationState(['a', 'b'], 0);
     var logs = [];
     var keys = {};
     var context = {name: 'yo'};
 
-    stack.forEach(function (route, index, key) {
+    state.forEach(function (route, index, key) {
       assetStringNotEmpty(key);
       if (!keys.hasOwnProperty(key)) {
         keys[key] = true;
@@ -337,11 +337,11 @@ describe('NavigationState:', () => {
   });
 
   it('Maps to an array', () => {
-    var stack = new NavigationState(['a', 'b'], 0);
+    var state = new NavigationState(['a', 'b'], 0);
     var keys = {};
     var context = {name: 'yo'};
 
-    var logs = stack.mapToArray(function(route, index, key) {
+    var logs = state.mapToArray(function(route, index, key) {
       assetStringNotEmpty(key);
       if (!keys.hasOwnProperty(key)) {
         keys[key] = true;
@@ -360,11 +360,11 @@ describe('NavigationState:', () => {
   });
 
   // Diff
-  it('subtracts stack', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 2);
-    var stack2 = stack1.pop().pop().push('x').push('y');
+  it('subtracts state', () => {
+    var state1 = new NavigationState(['a', 'b', 'c'], 2);
+    var state2 = state1.pop().pop().push('x').push('y');
 
-    var diff = stack1.subtract(stack2);
+    var diff = state1.subtract(state2);
 
     var result = diff.toJS().map((record) => {
       assetStringNotEmpty(record.key);
@@ -374,7 +374,7 @@ describe('NavigationState:', () => {
       };
     });
 
-    // route `b` and `c` are no longer in the stack.
+    // route `b` and `c` are no longer in the state.
     expect(result).toEqual([
       {
         index: 1,
@@ -387,10 +387,10 @@ describe('NavigationState:', () => {
     ]);
   });
 
-  it('only subtracts the derived stack', () => {
-    var stack1 = new NavigationState(['a', 'b', 'c'], 2);
-    var stack2 = new NavigationState(['a'], 0);
-    var diff = stack1.subtract(stack2);
+  it('only subtracts the derived state', () => {
+    var state1 = new NavigationState(['a', 'b', 'c'], 2);
+    var state2 = new NavigationState(['a'], 0);
+    var diff = state1.subtract(state2);
 
     var result = diff.toJS().map((record) => {
       assetStringNotEmpty(record.key);
@@ -419,8 +419,8 @@ describe('NavigationState:', () => {
 
   // find
   it('finds a route', () => {
-    var stack = new NavigationState(['a', 'b', 'c'], 2);
-    var route = stack.find(r => r === 'c');
+    var state = new NavigationState(['a', 'b', 'c'], 2);
+    var route = state.find(r => r === 'c');
     expect(route).toEqual('c');
   });
 });

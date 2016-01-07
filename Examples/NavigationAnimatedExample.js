@@ -21,6 +21,7 @@ var {
   NavigationContainer,
   NavigationHeader,
   NavigationState,
+  StyleSheet,
   Text,
 } = React;
 
@@ -32,7 +33,7 @@ class NavigationAnimatedExample extends React.Component {
         renderNavigator={(navState, onNavigation) => (
           <NavigationAnimatedView
             navigationState={navState}
-            style={{flex: 1}}
+            style={styles.animatedView}
             renderOverlay={(props) => (
               <NavigationHeader
                 {...props}
@@ -55,5 +56,11 @@ class NavigationAnimatedExample extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  animatedView: {
+    flex: 1,
+  },
+});
 
 module.exports = NavigationAnimatedExample;

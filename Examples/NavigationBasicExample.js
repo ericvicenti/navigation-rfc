@@ -18,6 +18,7 @@ var {
   NavigationContainer,
   NavigationReducer,
   NavigationState,
+  StyleSheet,
   Text,
   View,
 } = React;
@@ -29,7 +30,7 @@ var NavigationBasicExample = React.createClass({
         initialState={new NavigationState(['first page'], 0)}
         reducer={NavigationReducer}
         renderNavigator={(navState, onNavigation) => (
-          <View style={{flex:1, paddingTop: 30}}>
+          <View style={styles.topView}>
             <Text>Current page: {navState.get(navState.index)}</Text>
             <Text
               onPress={() => {
@@ -48,6 +49,13 @@ var NavigationBasicExample = React.createClass({
         )}
       />
     );
+  },
+});
+
+const styles = StyleSheet.create({
+  topView: {
+    flex: 1,
+    paddingTop: 30,
   },
 });
 

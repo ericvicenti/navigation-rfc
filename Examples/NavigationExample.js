@@ -16,6 +16,7 @@
 var React = require('react-native');
 var {
   Text,
+  StyleSheet,
   View,
 } = React;
 
@@ -41,7 +42,7 @@ var NavigationExample = React.createClass({
 
   _renderMenu: function() {
     return (
-      <View style={{flex: 1, padding: 10, marginTop: 20}}>
+      <View style={styles.menu}>
         {Object.keys(EXAMPLES).map(exampleName => (
           <Text
             key={exampleName}
@@ -66,6 +67,14 @@ var NavigationExample = React.createClass({
       return <Component onExampleExit={this._exitInnerExample} />;
     }
     return this._renderMenu();
+  },
+});
+
+const styles = StyleSheet.create({
+  menu: {
+    flex: 1,
+    padding: 10,
+    marginTop: 20,
   },
 });
 

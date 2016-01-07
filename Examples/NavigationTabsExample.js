@@ -55,7 +55,7 @@ var NavigationTabsExample = React.createClass({
         initialState={TABS}
         reducer={NavigationReducer}
         renderNavigator={(navigationState, onNavigation) => (
-          <View style={{flex:1, paddingTop: 30}}>
+          <View style={styles.topView}>
             <ExmpleTabPage />
             <Text onPress={this.props.onExampleExit}>Exit Tabs Example</Text>
             <TabBarIOS>
@@ -78,6 +78,13 @@ var NavigationTabsExample = React.createClass({
 
   _handleTabPress: function(onNavigation: Function, route: any) {
     onNavigation(new NavigationActions.JumpTo(route));
+  },
+});
+
+const styles = StyleSheet.create({
+  topView: {
+    flex: 1,
+    paddingTop: 30,
   },
 });
 
