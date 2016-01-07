@@ -16,13 +16,13 @@
 var React = require('react-native');
 var {
   NavigationActions,
-  NavigationAnimatedStackView,
+  NavigationAnimatedView,
   NavigationCard,
   NavigationContainer,
   NavigationHeader,
   NavigationReducer,
-  NavigationStack,
-  NavigationStackView,
+  NavigationState,
+  NavigationView,
   TabBarIOS,
   Text,
   View,
@@ -62,15 +62,15 @@ class ExampleSecondTabPageRoute extends ExampleRoute {
 class ExampleTabRoute extends ExampleRoute {
   constructor(params = {}) {
     super();
-    const {navigationStack} = params;
-    this._navigationStack = navigationStack || new NavigationStack([ new ExampleStarterRoute() ], 0);
+    const {navigationState} = params;
+    this._navigationState = navigationState || new NavigationState([ new ExampleStarterRoute() ], 0);
   }
-  getNavigationStack() {
-    return this._navigationStack;
+  getNavigationState() {
+    return this._navigationState;
   }
-  setNavigationStack(navigationStack) {
+  setNavigationState(navigationState) {
     var MyTabRouteClass = this.constructor;
-    return new MyTabRouteClass({navigationStack});
+    return new MyTabRouteClass({navigationState});
   }
 }
 
@@ -83,11 +83,11 @@ class ExampleFirstTabRoute extends ExampleTabRoute {
 class ExampleSecondTabRoute extends ExampleTabRoute {
   constructor(params = {}) {
     super(params);
-    const {navigationStack} = params;
-    this._navigationStack = navigationStack || new NavigationStack([ new ExampleSecondStarterRoute() ], 0);
+    const {navigationState} = params;
+    this._navigationState = navigationState || new NavigationState([ new ExampleSecondStarterRoute() ], 0);
   }
-  getNavigationStack() {
-    return this._navigationStack;
+  getNavigationState() {
+    return this._navigationState;
   }
   getTabName() {
     return 'Second';
@@ -103,7 +103,7 @@ class ExampleThirdTabRoute extends ExampleTabRoute {
 class ExampleTabScreen extends React.Component {
   render() {
     return (
-      <NavigationAnimatedStackView
+      <NavigationAnimatedView
         style={{flex: 1}}
         renderOverlay={(props) => (
           <NavigationHeader
@@ -140,62 +140,62 @@ var TABS = [
   new ExampleSecondTabRoute(),
   new ExampleThirdTabRoute(),
 ];
-var INITIAL_STACK = new NavigationStack(TABS, 0);
+var INITIAL_STACK = new NavigationState(TABS, 0);
 
-function MyNavigationReducer(lastStack, action) {
+function MyNavigationReducer(lastNavState, action) {
   if (action instanceof ExampleRoute) {
     // first determine what tab the new route belongs in.
     // default to the current tab
-    let tabRoute = lastStack.get(lastStack.index);
+    let tabRoute = lastNavState.get(lastNavState.index);
 
     if (action.getTab && action.getTab() === 'second') {
-      // this route can only appear in the second tab, so we need to find it in the route stack
-      const firstTabRoute = lastStack.find(route => route instanceof ExampleSecondTabRoute);
-      if (firstTabRoute != null) {
-        tabRoute = firstTabRoute;
+      // this route can only appear in the second tab, so we need to find it in the route state
+      const secondTabRoute = lastNavState.find(route => route instanceof ExampleSecondTabRoute);
+      if (secondTabRoute != null) {
+        tabRoute = secondTabRoute;
       }
     }
 
-    const tabIndex = lastStack.indexOf(tabRoute);
+    const tabIndex = lastNavState.indexOf(tabRoute);
 
-    // replace the route of the tab with a route inlucluding the pushed sub-navigation stack
-    let stack = lastStack.replaceAtIndex(
+    // replace the route of the tab with a route inlucluding the pushed sub-navState
+    let navState = lastNavState.replaceAtIndex(
       tabIndex,
-      tabRoute.setNavigationStack(
-        tabRoute.getNavigationStack().push(action)
+      tabRoute.setNavigationState(
+        tabRoute.getNavigationState().push(action)
       )
     );
-    // move the index of the stack to that of the tab we want
-    stack = stack.jumpToIndex(tabIndex);
+    // move the index of the navState to that of the tab we want
+    navState = navState.jumpToIndex(tabIndex);
 
-    // return the new stack
-    return stack;
+    // return the new navState
+    return navState;
   }
-  return NavigationReducer(lastStack, action);
+  return NavigationReducer(lastNavState, action);
 }
 
 class NavigationCompositionExample extends React.Component {
   render() {
     return (
       <NavigationContainer.RootContainer
-        initialStack={INITIAL_STACK}
+        initialState={INITIAL_STACK}
         reducer={MyNavigationReducer}
-        renderNavigator={(stack, onNavigation) => (
+        renderNavigator={(navState, onNavigation) => (
           <View style={{flex:1}}>
-            <NavigationStackView
-              navigationStack={stack}
+            <NavigationView
+              navigationState={navState}
               style={{flex: 1, marginBottom:49.5}}
               renderRoute={(route) => (
                 <ExampleTabScreen
                   route={route}
-                  navigationStack={route.getNavigationStack()}
+                  navigationState={route.getNavigationState()}
                   onNavigation={(action) => {
                     if (action instanceof ExampleExitRoute) {
                       this.props.onExampleExit();
                       return;
                     }
                     if (action instanceof NavigationActions.Abstract) {
-                      action = new NavigationActions.OnRouteNavigationStack(route, action);
+                      action = new NavigationActions.OnRouteNavigationState(route, action);
                     }
                     onNavigation(action);
                   }}
@@ -203,12 +203,12 @@ class NavigationCompositionExample extends React.Component {
               )}
             />
             <TabBarIOS style={{position: 'absolute', height:49.5, bottom:0,left:0,right:0}}>
-              {stack.mapToArray((route, index, key) => (
+              {navState.mapToArray((route, index, key) => (
                 <TabBarIOS.Item
                   title={route.getTabName && route.getTabName()}
                   icon={{uri: base64Icon, scale: 3}}
                   key={key}
-                  selected={index === stack.index}
+                  selected={index === navState.index}
                   onPress={() => {
                     onNavigation(new NavigationActions.JumpTo(route));
                   }}>

@@ -11,7 +11,7 @@
  */
 'use strict';
 
-var NavigationStack = require('./NavigationStack');
+var NavigationState = require('./NavigationState');
 var NavigationReducer = require('./NavigationReducer');
 var React = require('react-native');
 
@@ -19,30 +19,30 @@ class NavigationRootContainer extends React.Component {
   constructor(props: Object) {
     super(props);
     this.state = {
-      stack: this.props.initialStack,
+      navState: this.props.initialState,
     };
   }
   getChildContext(): Object {
     return {
       onNavigation: this.handleNavigation.bind(this),
-      navigationStack: this.state.stack,
+      navigationState: this.state.navState,
     };
   }
   handleNavigation(action: Object) {
     this.setState({
-      stack: this.props.reducer(this.state.stack, action),
+      navState: this.props.reducer(this.state.navState, action),
     });
   }
   render(): ReactElement {
     var navigator = this.props.renderNavigator(
-      this.state.stack,
+      this.state.navState,
       this.handleNavigation.bind(this)
     );
     return navigator;
   }
 }
 NavigationRootContainer.propTypes = {
-  initialStack: React.PropTypes.instanceOf(NavigationStack),
+  initialState: React.PropTypes.instanceOf(NavigationState),
   renderNavigator: React.PropTypes.func,
   reducer: React.PropTypes.func,
 };
@@ -51,7 +51,7 @@ NavigationRootContainer.defaultProps = {
 };
 NavigationRootContainer.childContextTypes = {
   onNavigation: React.PropTypes.func,
-  navigationStack: React.PropTypes.instanceOf(NavigationStack),
+  navigationState: React.PropTypes.instanceOf(NavigationState),
 };
 
 module.exports = NavigationRootContainer;

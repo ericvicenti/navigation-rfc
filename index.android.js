@@ -10,10 +10,10 @@ var {
 } = React;
 
 // Horrible hack to give our examples the appearance of navigation being a part of RN:
-React.NavigationStack = require('./Navigation/NavigationStack');
-React.NavigationStackView = require('./Navigation/NavigationStackView');
+React.NavigationState = require('./Navigation/NavigationState');
+React.NavigationView = require('./Navigation/NavigationView');
 React.NavigationActions = require('./Navigation/NavigationActions');
-React.NavigationAnimatedStackView = require('./Navigation/NavigationAnimatedStackView');
+React.NavigationAnimatedView = require('./Navigation/NavigationAnimatedView');
 React.NavigationReducer = require('./Navigation/NavigationReducer');
 React.NavigationContainer = require('./Navigation/NavigationContainer');
 

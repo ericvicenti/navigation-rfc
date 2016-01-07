@@ -11,7 +11,7 @@
  */
 'use strict';
 
-var NavigationStack = require('./NavigationStack');
+var NavigationState = require('./NavigationState');
 
 class NavigationAbstractAction {}
 
@@ -40,17 +40,17 @@ class NavigationJumpToAction extends NavigationAbstractAction {
 }
 
 class NavigationResetAction extends NavigationAbstractAction {
-  _stack: NavigationStack;
-  constructor(stack: NavigationStack) {
+  _state: NavigationState;
+  constructor(state: NavigationState) {
     super();
-    this._stack = stack;
+    this._state = state;
   }
-  getStack(): NavigationStack {
-    return this._stack;
+  getState(): NavigationState {
+    return this._state;
   }
 }
 
-class NavigationOnRouteNavigationStackAction extends NavigationAbstractAction {
+class NavigationOnRouteNavigationStateAction extends NavigationAbstractAction {
   _action: NavigationAbstractAction;
   _route: any;
   constructor(route: any, action: NavigationAbstractAction) {
@@ -72,6 +72,6 @@ NavigationActions.Push = NavigationPushAction;
 NavigationActions.Pop = NavigationPopAction;
 NavigationActions.JumpTo = NavigationJumpToAction;
 NavigationActions.Reset = NavigationResetAction;
-NavigationActions.OnRouteNavigationStack = NavigationOnRouteNavigationStackAction;
+NavigationActions.OnRouteNavigationState = NavigationOnRouteNavigationStateAction;
 
 module.exports = NavigationActions;

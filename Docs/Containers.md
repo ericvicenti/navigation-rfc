@@ -6,13 +6,13 @@ If you are using alternative redux providers, you may not need `NavigationContai
 
 ## RootContainer
 
-The developer can set the initial navigation stack and define how to render the application based on the current stack:
+The developer can set the initial navigation state and define how to render the application based on the current state:
 
 ```
 <NavigationContainer.RootContainer
-  initialStack={new Navigation.Stack(0, ['First Route'])}
-  renderNavigator={(navigationStack) => (
-    <Text>Currently at {navigationStack.get(navigationStack.index)}</Text>
+  initialState={new NavigationState(0, ['First Route'])}
+  renderNavigator={(navigationState) => (
+    <Text>Currently at {navigationState.get(navigationState.index)}</Text>
 ```
 
 It also provides a handler for navigation actions, and allows the reducer to be customised:
@@ -20,22 +20,22 @@ It also provides a handler for navigation actions, and allows the reducer to be 
 
 ## NavigationContainer.create
 
-It can be very tedious to pass the `onNavigation` and `navigationStack` props around throughout your entire application. To aleviate this, we have provided a higher-order "container" component that you can use to provide components with these props, so long as they are rendered under a `RootContainer`:
+It can be very tedious to pass the `onNavigation` and `navigationState` props around throughout your entire application. To aleviate this, we have provided a higher-order "container" component that you can use to provide components with these props, so long as they are rendered under a `RootContainer`:
 
 ```
 <NavigationContainer.RootContainer
-  initialStack={new Navigation.Stack(0, ['First Route'])}
-  renderNavigator={(navigationStack, onNavigation) => <ExampleComponent />}
+  initialState={new NavigationState(0, ['First Route'])}
+  renderNavigator={(navigationState, onNavigation) => <ExampleComponent />}
 ...
 
 class ExampleComponent {
   render() {
     <Text onPress={() => { this.props.onNavigation(new ExampleAction()) }}>
-      At index {this.props.navigationStack.index}. Tap to make action
+      At index {this.props.navigationState.index}. Tap to make action
     </Text>
   }
 }
 ExampleComponent = NavigationContainer.create(ExampleComponent);
 ```
 
-If `navigationStack` or `onNavigation` are actually passed to the container as props, the values will override the props for the container and for all sub-containers.
+If `navigationState` or `onNavigation` are actually passed to the container as props, the values will override the props for the container and for all sub-containers.

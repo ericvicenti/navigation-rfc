@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule NavigationStack
+ * @providesModule NavigationState
  * @flow
  */
 'use strict';
@@ -29,7 +29,7 @@ class RouteNode {
   value: any;
   constructor(route: any) {
     // Key value gets bigger incrementally. Developer can compare the
-    // keys of two routes then know which route is added to the stack
+    // keys of two routes then know which route is added to the state
     // earlier.
     this.key = String(_nextID++);
 
@@ -44,9 +44,9 @@ var StackDiffRecord = Record({
 });
 
 /**
- * Immutable route stack.
+ * An immutable route list with an index, used to model the navigation of an app
  */
-class NavigationStack {
+class NavigationState {
   _index: number;
 
   _routeNodes: List<RouteNode>;
@@ -54,7 +54,7 @@ class NavigationStack {
   constructor(routeArray: Array<any>, index: number) {
     let routeNodes: List;
 
-    // Internally, NavigationStack uses an immutable `List` to keep track of routes.
+    // Internally, NavigationState uses an immutable `List` to keep track of routes.
     // To keep the API simple, allow developers to pass in an array of raw routes
     if (routeArray instanceof List) {
       routeNodes = routeArray;
@@ -114,8 +114,8 @@ class NavigationStack {
 
   /**
    * Returns the key associated with the route.
-   * When a route is added to a stack, the stack creates a key for this route.
-   * The key will persist until the initial stack and its derived stack
+   * When a route is added to a state, the state creates a key for this route.
+   * The key will persist until the initial state and its derived state
    * no longer contains this route.
    */
   keyOf(route: any): ?string {
@@ -151,17 +151,17 @@ class NavigationStack {
     return this._routeNodes.findIndex(finder, this);
   }
 
-  slice(begin: ?number, end: ?number): NavigationStack {
+  slice(begin: ?number, end: ?number): NavigationState {
     var routeNodes = this._routeNodes.slice(begin, end);
     var index = Math.min(this._index, routeNodes.size - 1);
     return this._update(routeNodes, index);
   }
 
   /**
-   * Returns a new stack with the provided route appended,
-   * starting at this stack size.
+   * Returns a new state with the provided route appended,
+   * and moves the index to the newly appended route.
    */
-  push(route: any): NavigationStack {
+  push(route: any): NavigationState {
 
     invariant(
       !isRouteEmpty(route),
@@ -179,18 +179,17 @@ class NavigationStack {
   }
 
   /**
-   * Returns a new stack a size ones less than this stack,
-   * excluding the last index in this stack.
+   * Returns a new state with the last route removed, and the index set to the new last route
    */
-  pop(): NavigationStack {
-    invariant(this._routeNodes.size > 1, 'shoud not pop routeNodes stack to empty');
+  pop(): NavigationState {
+    invariant(this._routeNodes.size > 1, 'can not pop a NavigationState with only one route');
 
     // When popping, removes the rest of the routes past the current index.
     var routeNodes = this._routeNodes.slice(0, this._index);
     return this._update(routeNodes, routeNodes.size - 1);
   }
 
-  jumpToIndex(index: number): NavigationStack {
+  jumpToIndex(index: number): NavigationState {
     invariant(
       index > -1 && index < this._routeNodes.size,
       'index out of bound'
@@ -200,12 +199,12 @@ class NavigationStack {
   }
 
   /**
-   * Replace a route in the navigation stack.
+   * Replace a route in the navigation state.
    *
-   * `index` specifies the route in the stack that should be replaced.
+   * `index` specifies the route in the state that should be replaced.
    * If it's negative, it counts from the back.
    */
-  replaceAtIndex(index: number, route: any): NavigationStack {
+  replaceAtIndex(index: number, route: any): NavigationState {
     invariant(
       !isRouteEmpty(route),
       'Must supply route to replace'
@@ -250,12 +249,12 @@ class NavigationStack {
   }
 
   /**
-   * Returns a Set excluding any routes contained within the stack given.
+   * Returns a Set excluding any routes contained within the state given.
    */
-  subtract(stack: NavigationStack): Set<StackDiffRecord> {
+  subtract(state: NavigationState): Set<StackDiffRecord> {
     var items = [];
     this._routeNodes.forEach((node: RouteNode, index: number) => {
-      if (!stack._routeNodes.contains(node)) {
+      if (!state._routeNodes.contains(node)) {
         items.push(
           new StackDiffRecord({
             route: node.value,
@@ -268,12 +267,12 @@ class NavigationStack {
     return new Set(items);
   }
 
-  _update(routeNodes: List, index: number): NavigationStack {
+  _update(routeNodes: List, index: number): NavigationState {
     if (this._index === index && this._routeNodes === routeNodes) {
       return this;
     }
-    return new NavigationStack(routeNodes, index);
+    return new NavigationState(routeNodes, index);
   }
 }
 
-module.exports = NavigationStack;
+module.exports = NavigationState;

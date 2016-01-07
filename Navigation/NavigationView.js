@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule NavigationStackView
+ * @providesModule NavigationView
  * @flow
  */
 'use strict';
@@ -18,23 +18,23 @@ var {
   View,
 } = React;
 
-var NavigationStackView = React.createClass({
+var NavigationView = React.createClass({
   render: function() {
     return (
       <View
         style={this.props.style}>
-        {this.props.navigationStack.mapToArray(this._renderRoute)}
+        {this.props.navigationState.mapToArray(this._renderRoute)}
       </View>
     );
   },
   _renderRoute: function(route, index, key) {
-    var isSelected = index === this.props.navigationStack.index;
+    var isSelected = index === this.props.navigationState.index;
     return (
       <View
         key={key}
         pointerEvents={isSelected ? 'auto' : 'none'}
         style={[
-          styles.stack,
+          styles.navView,
           {opacity: isSelected ? 1 : 0},
         ]}>
         {this.props.renderRoute(route, index, key)}
@@ -43,10 +43,10 @@ var NavigationStackView = React.createClass({
   },
 });
 
-NavigationStackView = NavigationContainer.create(NavigationStackView);
+NavigationView = NavigationContainer.create(NavigationView);
 
 var styles = StyleSheet.create({
-  stack: {
+  navView: {
     position: 'absolute',
     left: 0,
     right: 0,
@@ -55,4 +55,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = NavigationStackView;
+module.exports = NavigationView;

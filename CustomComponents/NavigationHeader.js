@@ -31,7 +31,7 @@ var {
   Animated,
   Image,
   NavigationReducer,
-  NavigationStack,
+  NavigationState,
   NavigationContainer,
   StyleSheet,
   Text,
@@ -44,19 +44,19 @@ class NavigationHeader extends React.Component {
     super(props);
   }
   render() {
-    var stack = this.props.navigationStack;
+    var state = this.props.navigationState;
     return (
       <Animated.View
         style={[
           styles.header,
         ]}>
-        {stack.mapToArray(this._renderTitle.bind(this))}
+        {state.mapToArray(this._renderTitle.bind(this))}
         {this._renderBackButton()}
       </Animated.View>
     );
   }
   _renderBackButton() {
-    if (this.props.navigationStack.index === 0) {
+    if (this.props.navigationState.index === 0) {
       return null;
     }
     return (
@@ -95,7 +95,7 @@ class NavigationHeader extends React.Component {
   }
 }
 NavigationHeader.propTypes = {
-  navigationStack: React.PropTypes.instanceOf(NavigationStack),
+  navigationState: React.PropTypes.instanceOf(NavigationState),
   onNavigation: React.PropTypes.func.isRequired,
   getTitle: React.PropTypes.func.isRequired,
 };

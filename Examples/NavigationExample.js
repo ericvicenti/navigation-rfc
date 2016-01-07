@@ -22,7 +22,6 @@ var {
 var EXAMPLES = {
   'Tabs': require('./NavigationTabsExample'),
   'Basic': require('./NavigationBasicExample'),
-  'Container': require('./NavigationContainerExample'),
   'Animated Card Stack': require('./NavigationAnimatedExample'),
   'Composition': require('./NavigationCompositionExample'),
 };

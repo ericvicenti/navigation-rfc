@@ -14,4 +14,4 @@ If you're confused about all the navigation options, look at the [Navigation Lan
 - Advanced Guide (Coming Soon)
 - [Reducer and Actions](Docs/Reducer_Actions.md)
 - [Containers](Docs/Containers.md)
-- [AnimatedStackView](Docs/AnimatedStackView.md)
+- [AnimatedView](Docs/AnimatedView.md)

@@ -30,7 +30,7 @@ var React = require('react-native');
 var {
   Animated,
   NavigationActions,
-  NavigationStack,
+  NavigationState,
   NavigationContainer,
   PanResponder,
   StyleSheet,
@@ -45,7 +45,7 @@ class NavigationCard extends React.Component {
     super(props);
     this._responder = PanResponder.create({
       onMoveShouldSetPanResponder: (e, {dx, dy, moveX, moveY, x0, y0}) => {
-        if (this.props.navigationStack.index === 0) {
+        if (this.props.navigationState.index === 0) {
           return false;
         }
         if (moveX > 30) {
@@ -59,7 +59,7 @@ class NavigationCard extends React.Component {
       onPanResponderGrant: (e, {dx, dy, moveX, moveY, x0, y0}) => {
       },
       onPanResponderMove: (e, {dx}) => {
-        this.props.position.setValue((-dx / this._lastWidth) + this.props.navigationStack.index);
+        this.props.position.setValue((-dx / this._lastWidth) + this.props.navigationState.index);
       },
       onPanResponderRelease: (e, {vx, dx}) => {
         const xRatio = dx / this._lastWidth;
@@ -69,12 +69,12 @@ class NavigationCard extends React.Component {
           return;
         }
         Animated.spring(this.props.position, {
-          toValue: this.props.navigationStack.index,
+          toValue: this.props.navigationState.index,
         }).start();
       },
       onPanResponderTerminate: (e, {vx, dx}) => {
         Animated.spring(this.props.position, {
-          toValue: this.props.navigationStack.index,
+          toValue: this.props.navigationState.index,
         }).start();
       },
     });
@@ -116,7 +116,7 @@ class NavigationCard extends React.Component {
   }
 }
 NavigationCard.propTypes = {
-  navigationStack: React.PropTypes.instanceOf(NavigationStack),
+  navigationState: React.PropTypes.instanceOf(NavigationState),
 };
 NavigationCard = NavigationContainer.create(NavigationCard);
 

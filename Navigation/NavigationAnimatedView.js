@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule NavigationAnimatedStackView
+ * @providesModule NavigationAnimatedView
  * @flow
  */
 'use strict';
 
-var NavigationStack = require('./NavigationStack');
+var NavigationState = require('./NavigationState');
 var NavigationContainer = require('./NavigationContainer');
 var React = require('react-native');
 var {
@@ -31,7 +31,7 @@ var {
  */
 var NavigationSceneRecord = Record({
   /**
-   * The index of the route in the navigation route stack.
+   * The index of the route in the NavigationState.
    */
   index: -1,
   /**
@@ -45,8 +45,8 @@ var NavigationSceneRecord = Record({
 
   /**
    * Whether the target scene for the route is stale.
-   * If `true`, the route is no longer in the navigation route stack while its
-   * target scene may remain in the stack view.
+   * If `true`, the route is not in the current NavigationState while its
+   * target scene may remain in the view
    */
   stale: false,
 });
@@ -66,7 +66,7 @@ function compareKey(one: string, two: string): number {
 }
 
 /**
- * Helper function to sort records based on their stack index and view key.
+ * Helper function to sort records based on their index and view key.
  */
 function compareRecords(
   one: NavigationSceneRecord,
@@ -83,7 +83,7 @@ function compareRecords(
   return compareKey(one.key, two.key);
 }
 
-class NavigationAnimatedStackView extends React.Component {
+class NavigationAnimatedView extends React.Component {
   _position: Animated.Value;
   _postionListener: ?string;
   _lastHeight: number;
@@ -93,7 +93,7 @@ class NavigationAnimatedStackView extends React.Component {
   constructor(props) {
     super(props);
     this._onProgressChange = this._onProgressChange.bind(this);
-    this._position = new Animated.Value(this.props.navigationStack.index);
+    this._position = new Animated.Value(this.props.navigationState.index);
     this.state = {
       width: new Animated.Value(this._lastWidth),
       height: new Animated.Value(this._lastHeight),
@@ -102,24 +102,24 @@ class NavigationAnimatedStackView extends React.Component {
   }
   componentWillMount() {
     this.setState({
-      records: this._reduceRecords(this.state.records, this.props.navigationStack),
+      records: this._reduceRecords(this.state.records, this.props.navigationState),
     });
   }
   componentDidMount() {
     this._postionListener = this._position.addListener(this._onProgressChange);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.navigationStack !== this.props.navigationStack) {
+    if (nextProps.navigationState !== this.props.navigationState) {
       this.setState({
-        records: this._reduceRecords(this.state.records, nextProps.navigationStack, this.props.navigationStack),
+        records: this._reduceRecords(this.state.records, nextProps.navigationState, this.props.navigationState),
       });
     }
   }
   componentDidUpdate(lastProps) {
-    if (lastProps.navigationStack.index !== this.props.navigationStack.index) {
+    if (lastProps.navigationState.index !== this.props.navigationState.index) {
       Animated.spring(
         this._position,
-        {toValue: this.props.navigationStack.index}
+        {toValue: this.props.navigationState.index}
       ).start();
     }
   }
@@ -130,7 +130,7 @@ class NavigationAnimatedStackView extends React.Component {
     }
   }
   _onProgressChange(data: Object): void {
-    if (data.value !== this.props.navigationStack.index) {
+    if (data.value !== this.props.navigationState.index) {
       return;
     }
     this.state.records.forEach((record, key) => {
@@ -143,8 +143,8 @@ class NavigationAnimatedStackView extends React.Component {
   }
   _reduceRecords(
     records: Map,
-    nextStack: NavigationStack,
-    lastStack: ?NavigationStack
+    nextStack: NavigationState,
+    lastStack: ?NavigationState
   ): Map {
     records = records.withMutations(map => {
       if (lastStack) {
@@ -211,11 +211,11 @@ class NavigationAnimatedStackView extends React.Component {
     });
   }
 }
-NavigationAnimatedStackView.propTypes = {
-  navigationStack: React.PropTypes.instanceOf(NavigationStack).isRequired,
+NavigationAnimatedView.propTypes = {
+  navigationState: React.PropTypes.instanceOf(NavigationState).isRequired,
   renderScene: React.PropTypes.func.isRequired,
 };
-NavigationAnimatedStackView = NavigationContainer.create(NavigationAnimatedStackView);
-NavigationAnimatedStackView.NavigationSceneRecord = NavigationSceneRecord;
+NavigationAnimatedView = NavigationContainer.create(NavigationAnimatedView);
+NavigationAnimatedView.NavigationSceneRecord = NavigationSceneRecord;
 
-module.exports = NavigationAnimatedStackView;
+module.exports = NavigationAnimatedView;

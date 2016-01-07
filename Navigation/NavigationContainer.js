@@ -12,7 +12,7 @@
 'use strict';
 
 var React = require('react-native');
-var NavigationStack = require('./NavigationStack');
+var NavigationState = require('./NavigationState');
 var NavigationRootContainer = require('./NavigationRootContainer');
 
 function createNavigationContainer(Component: React.Component): React.Component {
@@ -21,7 +21,7 @@ function createNavigationContainer(Component: React.Component): React.Component 
       return (
         <Component
           onNavigation={this.getNavigationHandler.call(this)}
-          navigationStack={this.getNavigationStack.call(this)}
+          navigationState={this.getNavigationState.call(this)}
           {...this.props}
         />
       );
@@ -29,23 +29,23 @@ function createNavigationContainer(Component: React.Component): React.Component 
     getNavigationHandler() {
       return this.props.onNavigation || this.context.onNavigation;
     }
-    getNavigationStack() {
-      return this.props.navigationStack || this.context.navigationStack;
+    getNavigationState() {
+      return this.props.navigationState || this.context.navigationState;
     }
     getChildContext() {
       return {
         onNavigation: this.getNavigationHandler.call(this),
-        navigationStack: this.getNavigationStack.call(this),
+        navigationState: this.getNavigationState.call(this),
       };
     }
   }
   NavigationComponent.contextTypes = {
     onNavigation: React.PropTypes.func,
-    navigationStack: React.PropTypes.instanceOf(NavigationStack),
+    navigationState: React.PropTypes.instanceOf(NavigationState),
   };
   NavigationComponent.childContextTypes = {
     onNavigation: React.PropTypes.func,
-    navigationStack: React.PropTypes.instanceOf(NavigationStack),
+    navigationState: React.PropTypes.instanceOf(NavigationState),
   };
   return NavigationComponent;
 }

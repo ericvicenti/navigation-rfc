@@ -16,11 +16,11 @@
 var React = require('react-native');
 var {
   NavigationActions,
-  NavigationAnimatedStackView,
+  NavigationAnimatedView,
   NavigationCard,
   NavigationContainer,
   NavigationHeader,
-  NavigationStack,
+  NavigationState,
   Text,
 } = React;
 
@@ -28,10 +28,10 @@ class NavigationAnimatedExample extends React.Component {
   render() {
     return (
       <NavigationContainer.RootContainer
-        initialStack={new NavigationStack([ 'First Route' ], 0)}
-        renderNavigator={(stack, onNavigation) => (
-          <NavigationAnimatedStackView
-            navigationStack={stack}
+        initialState={new NavigationState([ 'First Route' ], 0)}
+        renderNavigator={(navState, onNavigation) => (
+          <NavigationAnimatedView
+            navigationState={navState}
             style={{flex: 1}}
             renderOverlay={(props) => (
               <NavigationHeader
@@ -42,7 +42,7 @@ class NavigationAnimatedExample extends React.Component {
             renderScene={(props) => (
               <NavigationCard
                 {...props}>
-                <Text>{stack.get(stack.index)}</Text>
+                <Text>{navState.get(navState.index)}</Text>
                 <Text onPress={() => {
                   onNavigation(new NavigationActions.Push('Another Route'));
                 }}>Push!</Text>

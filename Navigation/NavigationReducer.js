@@ -12,36 +12,36 @@
 'use strict';
 
 var NavigationActions = require('./NavigationActions');
-var NavigationStack = require('./NavigationStack');
+var NavigationState = require('./NavigationState');
 
-function NavigationReducer(stack: NavigationStack, action: NavigationActions.Abstract): NavigationStack {
-  if (action instanceof NavigationActions.OnRouteNavigationStack) {
+function NavigationReducer(state: NavigationState, action: NavigationActions.Abstract): NavigationState {
+  if (action instanceof NavigationActions.OnRouteNavigationState) {
     const route = action.getRoute();
-    const routeIndex = stack.indexOf(route);
+    const routeIndex = state.indexOf(route);
     if (routeIndex === -1) {
-      return stack;
+      return state;
     }
-    const subStack = route.getNavigationStack();
+    const subStack = route.getNavigationState();
     const newSubStack = NavigationReducer(subStack, action.getAction());
-    const newRoute = route.setNavigationStack(newSubStack);
-    return stack.replaceAtIndex(routeIndex, newRoute);
+    const newRoute = route.setNavigationState(newSubStack);
+    return state.replaceAtIndex(routeIndex, newRoute);
   }
   if (action instanceof NavigationActions.Push) {
-    return stack.push(action.getRoute());
+    return state.push(action.getRoute());
   }
   if (action instanceof NavigationActions.Pop) {
-    if (stack.size === 1) {
-      return stack;
+    if (state.size === 1) {
+      return state;
     }
-    return stack.pop();
+    return state.pop();
   }
   if (action instanceof NavigationActions.JumpTo) {
-    return stack.jumpToIndex(stack.indexOf(action.getRoute()));
+    return state.jumpToIndex(state.indexOf(action.getRoute()));
   }
   if (action instanceof NavigationActions.Reset) {
-    return action.getStack();
+    return action.getState();
   }
-  return stack;
+  return state;
 }
 
 NavigationReducer.Actions = NavigationActions;
