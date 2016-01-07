@@ -31,6 +31,7 @@ var EXAMPLES = {
   'Basic': require('./NavigationBasicExample'),
   'Animated Card Stack': require('./NavigationAnimatedExample'),
   'Composition': require('./NavigationCompositionExample'),
+  'Persistence': require('./NavigationPersistenceExample'),
 };
 
 var EXAMPLE_STORAGE_KEY = 'OPEN_NAVIGATION_EXAMPLE';

@@ -14,44 +14,83 @@
 var NavigationState = require('./NavigationState');
 var NavigationReducer = require('./NavigationReducer');
 var React = require('react-native');
+var {
+  AsyncStorage,
+} = React;
 
-class NavigationRootContainer extends React.Component {
-  constructor(props: Object) {
-    super(props);
-    this.state = {
-      navState: this.props.initialState,
-    };
-  }
-  getChildContext(): Object {
+var invariant = require('invariant');
+
+const NavigationRootContainer = React.createClass({
+  propTypes: {
+    initialState: React.PropTypes.instanceOf(NavigationState),
+    renderNavigator: React.PropTypes.func,
+    reducer: React.PropTypes.func,
+    persistenceKey: React.PropTypes.string,
+    stringToState: React.PropTypes.func,
+    stateToString: React.PropTypes.func,
+  },
+  getDefaultProps: function(): Object {
     return {
-      onNavigation: this.handleNavigation.bind(this),
+      reducer: NavigationReducer,
+    };
+  },
+  childContextTypes: {
+    onNavigation: React.PropTypes.func,
+    navigationState: React.PropTypes.instanceOf(NavigationState),
+  },
+  getInitialState: function(): Object {
+    let navState = null;
+    if (this.props.persistenceKey) {
+      invariant(
+        this.props.stringToState,
+        'Must provide conversion from string to NavigationState to use persistence'
+      );
+      invariant(
+        this.props.stateToString,
+        'Must provide conversion from NavigationState to string to use persistence'
+      );
+    } else {
+      navState = this.props.initialState;
+    }
+    return { navState };
+  },
+  componentDidMount: function() {
+    if (this.props.persistenceKey) {
+      AsyncStorage.getItem(this.props.persistenceKey, (err, storedString) => {
+        if (err || !storedString) {
+          this.setState({
+            navState: this.props.initialState,
+          });
+          return;
+        }
+        this.setState({
+          navState: this.props.stringToState(storedString),
+        });
+      });
+    }  
+  },
+  getChildContext: function(): Object {
+    return {
+      onNavigation: this.handleNavigation,
       navigationState: this.state.navState,
     };
-  }
-  handleNavigation(action: Object) {
+  },
+  handleNavigation: function(action: Object) {
+    const navState = this.props.reducer(this.state.navState, action);
     this.setState({
-      navState: this.props.reducer(this.state.navState, action),
+      navState,
     });
-  }
-  render(): ReactElement {
+    if (this.props.persistenceKey) {
+      AsyncStorage.setItem(this.props.persistenceKey, this.props.stateToString(navState));
+    }
+  },
+  render: function(): ReactElement {
     var navigator = this.props.renderNavigator(
       this.state.navState,
-      this.handleNavigation.bind(this)
+      this.handleNavigation
     );
     return navigator;
-  }
-}
-NavigationRootContainer.propTypes = {
-  initialState: React.PropTypes.instanceOf(NavigationState),
-  renderNavigator: React.PropTypes.func,
-  reducer: React.PropTypes.func,
-};
-NavigationRootContainer.defaultProps = {
-  reducer: NavigationReducer,
-};
-NavigationRootContainer.childContextTypes = {
-  onNavigation: React.PropTypes.func,
-  navigationState: React.PropTypes.instanceOf(NavigationState),
-};
+  },
+});
 
 module.exports = NavigationRootContainer;
