@@ -19,6 +19,7 @@ var {
   NavigationContainer,
   NavigationReducer,
   NavigationState,
+  StyleSheet,
   TabBarIOS,
   Text,
   View,

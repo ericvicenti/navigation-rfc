@@ -20,14 +20,4 @@ React.NavigationContainer = require('./Navigation/NavigationContainer');
 React.NavigationHeader = require('./CustomComponents/NavigationHeader');
 React.NavigationCard = require('./CustomComponents/NavigationCard');
 
-var NavigationExample = require('./Examples/NavigationExample');
-
-var NavigationExamples = React.createClass({
-  render: function() {
-    return (
-      <NavigationExample />
-    );
-  }
-});
-
-AppRegistry.registerComponent('NavigationExamples', () => NavigationExamples);
+AppRegistry.registerComponent('NavigationExamples', () => require('./Examples/NavigationExampleMenu'));

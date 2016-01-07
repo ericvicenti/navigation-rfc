@@ -15,11 +15,17 @@
 
 var React = require('react-native');
 var {
+  AsyncStorage,
   Text,
   StyleSheet,
   View,
 } = React;
 
+/*
+ * Heads up! This file is not the real navigation example- only a utility to switch between them.
+ *
+ * To learn how to use the Navigation API, take a look at the following exmample files:
+ */
 var EXAMPLES = {
   'Tabs': require('./NavigationTabsExample'),
   'Basic': require('./NavigationBasicExample'),
@@ -27,7 +33,9 @@ var EXAMPLES = {
   'Composition': require('./NavigationCompositionExample'),
 };
 
-var NavigationExample = React.createClass({
+var EXAMPLE_STORAGE_KEY = 'OPEN_NAVIGATION_EXAMPLE';
+
+var NavigationExampleMenu = React.createClass({
   statics: {
     title: 'Navigation',
     description: 'Core APIs and animated navigation',
@@ -40,6 +48,27 @@ var NavigationExample = React.createClass({
     };
   },
 
+  componentDidMount() {
+    AsyncStorage.getItem(EXAMPLE_STORAGE_KEY, (err, example) => {
+      if (err || !example) {
+        this.setState({
+          example: 'menu',
+        });
+        return;
+      }
+      this.setState({
+        example,
+      });
+    });
+  },
+
+  setExample: function(example) {
+    this.setState({
+      example,
+    });
+    AsyncStorage.setItem(EXAMPLE_STORAGE_KEY, example);
+  },
+
   _renderMenu: function() {
     return (
       <View style={styles.menu}>
@@ -47,26 +76,28 @@ var NavigationExample = React.createClass({
           <Text
             key={exampleName}
             onPress={() => {
-              this.setState({ example: exampleName });
+              this.setExample(exampleName);
             }}>
             {exampleName}
           </Text>
         ))}
-        <Text onPress={this.props.onExampleExit}>Exit Navigation Examples</Text>
       </View>
     );
   },
 
   _exitInnerExample: function() {
-    this.setState({ example: null });
+    this.setExample('menu');
   },
 
   render: function() {
+    if (this.state.example === 'menu') {
+      return this._renderMenu();
+    }
     if (EXAMPLES[this.state.example]) {
       var Component = EXAMPLES[this.state.example];
       return <Component onExampleExit={this._exitInnerExample} />;
     }
-    return this._renderMenu();
+    return null;
   },
 });
 
@@ -78,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = NavigationExample;
+module.exports = NavigationExampleMenu;
