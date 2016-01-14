@@ -22,7 +22,7 @@ describe('NavigationReducer', () => {
 
   it('handles Push', () => {
     let state = new NavigationState(['a'], 0);
-    let action = new NavigationActions.Push('b');
+    let action = NavigationActions.Push('b');
     state = NavigationReducer(state, action);
 
     expect(state.get(0)).toBe('a');
@@ -33,14 +33,14 @@ describe('NavigationReducer', () => {
 
   it('handles Pop', () => {
     let state = new NavigationState(['a', 'b'], 1);
-    let action = new NavigationActions.Pop();
+    let action = NavigationActions.Pop();
     state = NavigationReducer(state, action);
 
     expect(state.get(0)).toBe('a');
     expect(state.size).toBe(1);
     expect(state.index).toBe(0);
 
-    action = new NavigationActions.Pop();
+    action = NavigationActions.Pop();
     state = NavigationReducer(state, action);
 
     expect(state.size).toBe(1);
@@ -49,13 +49,13 @@ describe('NavigationReducer', () => {
 
   it('handles JumpTo', () => {
     let state = new NavigationState(['a', 'b', 'c'], 0);
-    let action = new NavigationActions.JumpTo('b');
+    let action = NavigationActions.JumpTo('b');
     state = NavigationReducer(state, action);
 
     expect(state.size).toBe(3);
     expect(state.index).toBe(1);
 
-    action = new NavigationActions.JumpTo('c');
+    action = NavigationActions.JumpTo('c');
     state = NavigationReducer(state, action);
 
     expect(state.size).toBe(3);
@@ -64,7 +64,7 @@ describe('NavigationReducer', () => {
 
   it('handles Reset', () => {
     let state = new NavigationState(['a', 'b'], 0);
-    let action = new NavigationActions.Reset(new NavigationState(['c', 'd'], 1));
+    let action = NavigationActions.Reset(['c', 'd'], 1);
     state = NavigationReducer(state, action);
 
     expect(state.get(0)).toBe('c');

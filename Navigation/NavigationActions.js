@@ -11,63 +11,42 @@
  */
 'use strict';
 
-var NavigationState = require('./NavigationState');
-
-class NavigationAbstractAction {}
-
-class NavigationPushAction extends NavigationAbstractAction {
-  _route: any;
-  constructor(route: any) {
-    super();
-    this._route = route;
-  }
-  getRoute(): any {
-    return this._route;
-  }
+function NavigationPushAction(route: any) {
+  return {
+    type: 'navigation-rfc/push',
+    route,
+  };
 }
 
-class NavigationPopAction extends NavigationAbstractAction {}
-
-class NavigationJumpToAction extends NavigationAbstractAction {
-  _route: any;
-  constructor(route: any) {
-    super();
-    this._route = route;
-  }
-  getRoute(): any {
-    return this._route;
-  }
+function NavigationPopAction() {
+  return {
+    type: 'navigation-rfc/pop',
+  };
 }
 
-class NavigationResetAction extends NavigationAbstractAction {
-  _state: NavigationState;
-  constructor(state: NavigationState) {
-    super();
-    this._state = state;
-  }
-  getState(): NavigationState {
-    return this._state;
-  }
+function NavigationJumpToAction(route: any) {
+  return {
+    type: 'navigation-rfc/jumpTo',
+  };
 }
 
-class NavigationOnRouteNavigationStateAction extends NavigationAbstractAction {
-  _action: NavigationAbstractAction;
-  _route: any;
-  constructor(route: any, action: NavigationAbstractAction) {
-    super();
-    this._route = route;
-    this._action = action;
-  }
-  getRoute(): any {
-    return this._route;
-  }
-  getAction(): NavigationAbstractAction {
-    return this._action;
-  }
+function NavigationResetAction(routes: Array<any>, index: number) {
+  return {
+    type: 'navigation-rfc/reset',
+    routes,
+    index,
+  };
+}
+
+function NavigationOnRouteNavigationStateAction(route: any, action: Object) {
+  return {
+    type: 'navigation-rfc/onRouteAction',
+    route,
+    action,
+  };
 }
 
 var NavigationActions = {};
-NavigationActions.Abstract = NavigationAbstractAction;
 NavigationActions.Push = NavigationPushAction;
 NavigationActions.Pop = NavigationPopAction;
 NavigationActions.JumpTo = NavigationJumpToAction;
