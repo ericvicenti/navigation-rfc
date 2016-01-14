@@ -22,8 +22,9 @@ var {
   NavigationHeader,
   NavigationState,
   StyleSheet,
-  Text,
+  ScrollView,
 } = React;
+var NavigationExampleRow = require('./NavigationExampleRow');
 
 class NavigationAnimatedExample extends React.Component {
   render() {
@@ -43,11 +44,21 @@ class NavigationAnimatedExample extends React.Component {
             renderScene={(props) => (
               <NavigationCard
                 {...props}>
-                <Text>{navState.get(navState.index)}</Text>
-                <Text onPress={() => {
-                  onNavigation(new NavigationActions.Push('Another Route'));
-                }}>Push!</Text>
-                <Text onPress={this.props.onExampleExit}>Exit Animated Nav Example</Text>
+                <ScrollView>
+                  <NavigationExampleRow
+                    text={navState.get(navState.index)}
+                  />
+                  <NavigationExampleRow
+                    text="Push!"
+                    onPress={() => {
+                      onNavigation(new NavigationActions.Push('Another Route'));
+                    }}
+                  />
+                  <NavigationExampleRow
+                    text="Exit Animated Nav Example"
+                    onPress={this.props.onExampleExit}
+                  />
+                </ScrollView>
               </NavigationCard>
             )}
           />
