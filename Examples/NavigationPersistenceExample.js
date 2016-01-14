@@ -69,7 +69,7 @@ const NavigationAnimatedExample = React.createClass({
         renderScene={(props) => (
           <NavigationCard
             {...props}>
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
               <NavigationExampleRow
                 text={navState.get(navState.index)}
               />
@@ -94,6 +94,9 @@ const NavigationAnimatedExample = React.createClass({
 const styles = StyleSheet.create({
   animatedView: {
     flex: 1,
+  },
+  scrollView: {
+    marginTop: 64
   },
 });
 
