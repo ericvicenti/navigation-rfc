@@ -18,10 +18,11 @@ var {
   NavigationContainer,
   NavigationReducer,
   NavigationState,
+  ScrollView,
   StyleSheet,
-  Text,
   View,
 } = React;
+var NavigationExampleRow = require('./NavigationExampleRow');
 
 var NavigationBasicExample = React.createClass({
   render: function() {
@@ -30,22 +31,27 @@ var NavigationBasicExample = React.createClass({
         initialState={new NavigationState(['first page'], 0)}
         reducer={NavigationReducer}
         renderNavigator={(navState, onNavigation) => (
-          <View style={styles.topView}>
-            <Text>Current page: {navState.get(navState.index)}</Text>
-            <Text
+          <ScrollView style={styles.topView}>
+            <NavigationExampleRow
+              text={`Current page: ${navState.get(navState.index)}`}
+            />
+            <NavigationExampleRow
+              text={`Push page #${navState.size}`}
               onPress={() => {
                 onNavigation(new NavigationReducer.Actions.Push('page #' + navState.size));
-              }}>
-              Push page #{navState.size}
-            </Text>
-            <Text
+              }}
+            />
+            <NavigationExampleRow
+              text="pop"
               onPress={() => {
                 onNavigation(new NavigationReducer.Actions.Pop());
-              }}>
-              Pop
-            </Text>
-            <Text onPress={this.props.onExampleExit}>Exit Basic Nav Example</Text>
-          </View>
+              }}
+            />
+            <NavigationExampleRow
+              text="Exit Basic Nav Example"
+              onPress={this.props.onExampleExit}
+            />
+          </ScrollView>
         )}
       />
     );
@@ -54,6 +60,7 @@ var NavigationBasicExample = React.createClass({
 
 const styles = StyleSheet.create({
   topView: {
+    backgroundColor: '#E9E9EF',
     flex: 1,
     paddingTop: 30,
   },

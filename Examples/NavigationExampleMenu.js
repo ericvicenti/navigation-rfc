@@ -16,10 +16,11 @@
 var React = require('react-native');
 var {
   AsyncStorage,
-  Text,
+  ScrollView,
   StyleSheet,
   View,
 } = React;
+var NavigationExampleRow = require('./NavigationExampleRow');
 
 /*
  * Heads up! This file is not the real navigation example- only a utility to switch between them.
@@ -73,17 +74,23 @@ var NavigationExampleMenu = React.createClass({
   _renderMenu: function() {
     return (
       <View style={styles.menu}>
-        {Object.keys(EXAMPLES).map(exampleName => (
-          <Text
-            key={exampleName}
-            onPress={() => {
-              this.setExample(exampleName);
-            }}>
-            {exampleName}
-          </Text>
-        ))}
+        <ScrollView>
+          {this._renderExampleList()}
+        </ScrollView>
       </View>
     );
+  },
+
+  _renderExampleList: function() {
+    return Object.keys(EXAMPLES).map(exampleName => (
+      <NavigationExampleRow
+        key={exampleName}
+        text={exampleName}
+        onPress={() => {
+          this.setExample(exampleName);
+        }}
+      />
+    ));
   },
 
   _exitInnerExample: function() {
@@ -104,8 +111,8 @@ var NavigationExampleMenu = React.createClass({
 
 const styles = StyleSheet.create({
   menu: {
+    backgroundColor: '#E9E9EF',
     flex: 1,
-    padding: 10,
     marginTop: 20,
   },
 });
