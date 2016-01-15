@@ -103,11 +103,15 @@ class NavigationCard extends React.Component {
         style={[
           styles.card,
           {
-            right: gestureValue,
-            left: gestureValue.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, -1],
-            }),
+            transform: [
+              {
+                translateX: gestureValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -1],
+                }),
+              },
+            ],
+
           }
         ]}>
         {this.props.children}
@@ -128,8 +132,10 @@ var styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 0},
     shadowRadius: 10,
     top: 0,
+    right: 0,
     bottom: 0,
-    position: 'absolute',
+    left: 0,
+    position: 'absolute'
   },
 });
 
