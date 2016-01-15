@@ -127,7 +127,6 @@ var styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowOffset: {width: 0, height: 0},
     shadowRadius: 10,
-    paddingTop: 64,
     top: 0,
     bottom: 0,
     position: 'absolute',
