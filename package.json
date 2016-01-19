@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "immutable": "^3.7.6",
-    "react-native": "git+https://github.com/facebook/react-native#0.18-stable",
+    "react-native": "^0.18.0",
     "tinycolor": "0.0.1"
   }
 }
