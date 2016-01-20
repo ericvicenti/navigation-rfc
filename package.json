@@ -1,6 +1,6 @@
 {
   "name": "navigation-rfc",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "dependencies": {
     "react-native": "^0.18.0"
   }
