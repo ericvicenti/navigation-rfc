@@ -1,9 +1,7 @@
 {
   "name": "navigation-rfc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
-    "immutable": "^3.7.6",
-    "react-native": "^0.18.0",
-    "tinycolor": "0.0.1"
+    "react-native": "^0.18.0"
   }
 }
