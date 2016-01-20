@@ -11,67 +11,71 @@
  */
 'use strict';
 
-var NavigationState = require('./NavigationState');
+import type {NavigationRoute} from 'NavigationState';
 
-class NavigationAbstractAction {}
+export type NavigationAction = {
+  type: string,
+};
 
-class NavigationPushAction extends NavigationAbstractAction {
-  _route: any;
-  constructor(route: any) {
-    super();
-    this._route = route;
-  }
-  getRoute(): any {
-    return this._route;
-  }
+const ActionTypes = {
+  PUSH: 'navigation-rfc/push',
+  POP: 'navigation-rfc/pop',
+  JUMP_TO: 'navigation-rfc/jumpTo',
+  RESET: 'navigation-rfc/reset',
+  ON_ROUTE_KEY: 'navigation-rfc/onRouteKey',
+};
+
+const _ActionValues = Object.keys(ActionTypes).map(k => ActionTypes[k]);
+
+function NavigationPushAction(route: NavigationRoute): NavigationAction {
+  return {
+    type: ActionTypes.PUSH,
+    route,
+  };
 }
 
-class NavigationPopAction extends NavigationAbstractAction {}
-
-class NavigationJumpToAction extends NavigationAbstractAction {
-  _route: any;
-  constructor(route: any) {
-    super();
-    this._route = route;
-  }
-  getRoute(): any {
-    return this._route;
-  }
+function NavigationPopAction(): NavigationAction {
+  return {
+    type: ActionTypes.POP,
+  };
 }
 
-class NavigationResetAction extends NavigationAbstractAction {
-  _state: NavigationState;
-  constructor(state: NavigationState) {
-    super();
-    this._state = state;
-  }
-  getState(): NavigationState {
-    return this._state;
-  }
+function NavigationJumpToAction(key: string): NavigationAction {
+  return {
+    type: ActionTypes.JUMP_TO,
+    key,
+  };
 }
 
-class NavigationOnRouteNavigationStateAction extends NavigationAbstractAction {
-  _action: NavigationAbstractAction;
-  _route: any;
-  constructor(route: any, action: NavigationAbstractAction) {
-    super();
-    this._route = route;
-    this._action = action;
-  }
-  getRoute(): any {
-    return this._route;
-  }
-  getAction(): NavigationAbstractAction {
-    return this._action;
-  }
+function NavigationResetAction(routes: Array<NavigationRoute>, index: number): NavigationAction {
+  return {
+    type: ActionTypes.RESET,
+    index,
+    routes,
+  };
 }
 
-var NavigationActions = {};
-NavigationActions.Abstract = NavigationAbstractAction;
-NavigationActions.Push = NavigationPushAction;
-NavigationActions.Pop = NavigationPopAction;
-NavigationActions.JumpTo = NavigationJumpToAction;
-NavigationActions.Reset = NavigationResetAction;
-NavigationActions.OnRouteNavigationState = NavigationOnRouteNavigationStateAction;
+function NavigationOnRouteKeyAction(key: string, action: NavigationAction): NavigationAction {
+  return {
+    type: ActionTypes.ON_ROUTE_KEY,
+    key,
+    action,
+  };
+}
+
+function isNavigationAction(action: Object): boolean {
+  return _ActionValues.indexOf(action.type) !== -1; 
+}
+
+var NavigationActions = {
+  Push: NavigationPushAction,
+  Pop: NavigationPopAction,
+  JumpTo: NavigationJumpToAction,
+  Reset: NavigationResetAction,
+  OnRouteKey: NavigationOnRouteKeyAction,
+
+  isNavigationAction,
+  Types: ActionTypes,
+};
 
 module.exports = NavigationActions;

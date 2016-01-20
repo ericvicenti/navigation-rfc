@@ -16,6 +16,7 @@
 var React = require('react-native');
 var {
   AsyncStorage,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -32,7 +33,6 @@ var EXAMPLES = {
   'Basic': require('./NavigationBasicExample'),
   'Animated Card Stack': require('./NavigationAnimatedExample'),
   'Composition': require('./NavigationCompositionExample'),
-  'Persistence': require('./NavigationPersistenceExample'),
 };
 
 var EXAMPLE_STORAGE_KEY = 'OPEN_NAVIGATION_EXAMPLE';
@@ -72,10 +72,20 @@ var NavigationExampleMenu = React.createClass({
   },
 
   _renderMenu: function() {
+    var exitRow = null;
+    if (this.props.onExampleExit) {
+      exitRow = (
+        <NavigationExampleRow
+          text="Exit Navigation Examples"
+          onPress={this.props.onExampleExit}
+        />
+      );
+    }
     return (
       <View style={styles.menu}>
         <ScrollView>
           {this._renderExampleList()}
+          {exitRow}
         </ScrollView>
       </View>
     );
@@ -113,7 +123,7 @@ const styles = StyleSheet.create({
   menu: {
     backgroundColor: '#E9E9EF',
     flex: 1,
-    marginTop: 20,
+    marginTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
 

@@ -41,12 +41,12 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 class NavigationHeader extends React.Component {
-  _renderLeftComponent = (route, index, key) => {
+  _renderLeftComponent = (route, index) => {
     if (this.props.renderLeftComponent) {
       return (
         <Animated.View
           pointerEvents={this.props.navigationState.index === index ? 'auto' : 'none'}
-          key={key}
+          key={NavigationState.getKey(route)}
           style={[
             styles.left,
             {
@@ -65,12 +65,12 @@ class NavigationHeader extends React.Component {
     return null;
   };
 
-  _renderRightComponent = (route, index, key) => {
+  _renderRightComponent = (route, index) => {
     if (this.props.renderRightComponent) {
       return (
         <Animated.View
           pointerEvents={this.props.navigationState.index === index ? 'auto' : 'none'}
-          key={key}
+          key={NavigationState.getKey(route)}
           style={[
             styles.right,
             {
@@ -89,12 +89,12 @@ class NavigationHeader extends React.Component {
     return null;
   };
 
-  _renderTitle = (route, index, key) => {
+  _renderTitle = (route, index) => {
     if (this.props.renderTitleComponent) {
       return (
         <Animated.View
           pointerEvents={this.props.navigationState.index === index ? 'auto' : 'none'}
-          key={key}
+          key={NavigationState.getKey(route)}
           style={[
             styles.title,
             {
@@ -126,9 +126,9 @@ class NavigationHeader extends React.Component {
 
     return (
       <View style={[ styles.appbar, this.props.style ]}>
-        {state.mapToArray(this._renderLeftComponent)}
-        {state.mapToArray(this._renderTitle)}
-        {state.mapToArray(this._renderRightComponent)}
+        {state.routes.map(this._renderLeftComponent)}
+        {state.routes.map(this._renderTitle)}
+        {state.routes.map(this._renderRightComponent)}
       </View>
     );
   }
@@ -136,7 +136,7 @@ class NavigationHeader extends React.Component {
 
 NavigationHeader.propTypes = {
   position: React.PropTypes.object.isRequired,
-  navigationState: React.PropTypes.instanceOf(NavigationState),
+  navigationState: React.PropTypes.object,
   onNavigation: React.PropTypes.func.isRequired,
   renderTitleComponent: React.PropTypes.func,
   renderLeftComponent: React.PropTypes.func,

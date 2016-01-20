@@ -15,9 +15,10 @@
 
 var React = require('react-native');
 var {
+  NavigationActions,
   NavigationContainer,
   NavigationReducer,
-  NavigationState,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -28,31 +29,35 @@ var NavigationBasicExample = React.createClass({
   render: function() {
     return (
       <NavigationContainer.RootContainer
-        initialState={new NavigationState(['first page'], 0)}
+        initialState={{routes: ['first page'], index: 0}}
         reducer={NavigationReducer}
-        renderNavigator={(navState, onNavigation) => (
-          <ScrollView style={styles.topView}>
-            <NavigationExampleRow
-              text={`Current page: ${navState.get(navState.index)}`}
-            />
-            <NavigationExampleRow
-              text={`Push page #${navState.size}`}
-              onPress={() => {
-                onNavigation(new NavigationReducer.Actions.Push('page #' + navState.size));
-              }}
-            />
-            <NavigationExampleRow
-              text="pop"
-              onPress={() => {
-                onNavigation(new NavigationReducer.Actions.Pop());
-              }}
-            />
-            <NavigationExampleRow
-              text="Exit Basic Nav Example"
-              onPress={this.props.onExampleExit}
-            />
-          </ScrollView>
-        )}
+        persistenceKey="NAV_EXAMPLE_STATE_BASIC"
+        renderNavigator={(navState, onNavigation) => {
+          if (!navState) { return null; }
+          return (
+            <ScrollView style={styles.topView}>
+              <NavigationExampleRow
+                text={`Current page: ${navState.routes[navState.index]}`}
+              />
+              <NavigationExampleRow
+                text={`Push page #${navState.routes.length}`}
+                onPress={() => {
+                  onNavigation(NavigationActions.Push('page #' + navState.routes.length));
+                }}
+              />
+              <NavigationExampleRow
+                text="pop"
+                onPress={() => {
+                  onNavigation(NavigationActions.Pop());
+                }}
+              />
+              <NavigationExampleRow
+                text="Exit Basic Nav Example"
+                onPress={this.props.onExampleExit}
+              />
+            </ScrollView>
+          );
+        }}
       />
     );
   },
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
   topView: {
     backgroundColor: '#E9E9EF',
     flex: 1,
-    paddingTop: 30,
+    paddingTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
 

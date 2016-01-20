@@ -33,45 +33,60 @@ class NavigationAnimatedExample extends React.Component {
   render() {
     return (
       <NavigationContainer.RootContainer
-        initialState={new NavigationState([ 'First Route' ], 0)}
-        renderNavigator={(navState, onNavigation) => (
-          <NavigationAnimatedView
-            navigationState={navState}
-            style={styles.animatedView}
-            renderOverlay={(props) => (
-              <NavigationHeader
-                {...props}
-                renderLeftComponent={(route, index) => {
-                  if (index === 0) {
-                    return null;
-                  }
+        initialState={{routes: [ 'First Route' ], index: 0}}
+        persistenceKey="NAV_EXAMPLE_STATE_ANIMATED"
+        renderNavigator={(navState, onNavigation) => {
+          if (!navState) {
+            return null;
+          }
+          return this._renderNavigated.call(this, navState, onNavigation);
+        }}
+      />
+    );
+  }
+  _renderNavigated(navState, onNavigation) {
+    return (
+      <NavigationAnimatedView
+        navigationState={navState}
+        style={styles.animatedView}
+        renderOverlay={(navState, position, layout) => (
+            <NavigationHeader
+              position={position}
+              layout={layout}
+              renderLeftComponent={(route, index) => {
+                if (index === 0) {
+                  return null;
+                }
 
-                  return <NavigationExampleBackButton onNavigation={onNavigation} />;
-                }}
-                renderTitleComponent={route => <NavigationHeaderTitle>{route}</NavigationHeaderTitle>}
+                return <NavigationExampleBackButton onNavigation={onNavigation} />;
+              }}
+              renderTitleComponent={route => <NavigationHeaderTitle>{route}</NavigationHeaderTitle>}
+            />
+        )}
+        renderScene={(route, index, navState, position, layout) => (
+          <NavigationCard
+            key={route}
+            route={route}
+            index={index}
+            navState={navState}
+            position={position}
+            layout={layout}>
+            <ScrollView>
+              <NavigationExampleRow
+                text={navState.routes[navState.index]}
               />
-            )}
-            renderScene={(props) => (
-              <NavigationCard
-                {...props}>
-                <ScrollView style={styles.scrollView}>
-                  <NavigationExampleRow
-                    text={props.sceneRecord.get('route')}
-                  />
-                  <NavigationExampleRow
-                    text="Push!"
-                    onPress={() => {
-                      onNavigation(new NavigationActions.Push('Another Route'));
-                    }}
-                  />
-                  <NavigationExampleRow
-                    text="Exit Animated Nav Example"
-                    onPress={this.props.onExampleExit}
-                  />
-                </ScrollView>
-              </NavigationCard>
-            )}
-          />
+              <NavigationExampleRow
+                text="Push!"
+                onPress={() => {
+                  onNavigation(NavigationActions.Push('Route #'+navState.routes.length));
+                }}
+              />
+              <NavigationExampleRow
+                text="Exit Animated Nav Example"
+                onPress={this.props.onExampleExit}
+              />
+            </ScrollView>
+          </NavigationCard>
         )}
       />
     );

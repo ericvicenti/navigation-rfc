@@ -11,43 +11,42 @@
  */
 'use strict';
 
-var NavigationState = require('./NavigationState');
-var NavigationReducer = require('./NavigationReducer');
-var React = require('react-native');
-var {
-  AsyncStorage,
-} = React;
+var AsyncStorage = require('AsyncStorage');
+var NavigationReducer = require('NavigationReducer');
+var React = require('React');
 
 var invariant = require('invariant');
 
 const NavigationRootContainer = React.createClass({
   propTypes: {
-    initialState: React.PropTypes.instanceOf(NavigationState),
-    renderNavigator: React.PropTypes.func,
+    initialState: React.PropTypes.object.isRequired,
+    renderNavigator: React.PropTypes.func.isRequired,
     reducer: React.PropTypes.func,
     persistenceKey: React.PropTypes.string,
-    stringToState: React.PropTypes.func,
-    stateToString: React.PropTypes.func,
+    stringToRoute: React.PropTypes.func,
+    routeToString: React.PropTypes.func,
   },
   getDefaultProps: function(): Object {
     return {
       reducer: NavigationReducer,
+      stringToRoute: JSON.parse,
+      routeToString: JSON.stringify,
     };
   },
   childContextTypes: {
     onNavigation: React.PropTypes.func,
-    navigationState: React.PropTypes.instanceOf(NavigationState),
+    navigationState: React.PropTypes.object,
   },
   getInitialState: function(): Object {
     let navState = null;
     if (this.props.persistenceKey) {
       invariant(
-        this.props.stringToState,
-        'Must provide conversion from string to NavigationState to use persistence'
+        this.props.stringToRoute,
+        'Must provide conversion from string to NavigationRoute to use persistence'
       );
       invariant(
-        this.props.stateToString,
-        'Must provide conversion from NavigationState to string to use persistence'
+        this.props.routeToString,
+        'Must provide conversion from NavigationRoute to string to use persistence'
       );
     } else {
       navState = this.props.initialState;
@@ -64,10 +63,11 @@ const NavigationRootContainer = React.createClass({
           return;
         }
         this.setState({
-          navState: this.props.stringToState(storedString),
+          /* $FlowFixMe - default props will ensure this prop is not undefined */
+          navState: this.props.stringToRoute(storedString),
         });
       });
-    }  
+    }
   },
   getChildContext: function(): Object {
     return {
@@ -76,12 +76,14 @@ const NavigationRootContainer = React.createClass({
     };
   },
   handleNavigation: function(action: Object) {
+    /* $FlowFixMe - default props will ensure this prop is not undefined */
     const navState = this.props.reducer(this.state.navState, action);
     this.setState({
       navState,
     });
     if (this.props.persistenceKey) {
-      AsyncStorage.setItem(this.props.persistenceKey, this.props.stateToString(navState));
+      /* $FlowFixMe - default props will ensure this prop is not undefined */
+      AsyncStorage.setItem(this.props.persistenceKey, this.props.routeToString(navState));
     }
   },
   render: function(): ReactElement {
