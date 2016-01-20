@@ -21,87 +21,108 @@ var NavigationState = require('NavigationState');
 describe('NavigationReducer', () => {
 
   it('handles Push', () => {
-    let state = new NavigationState(['a'], 0);
-    let action = new NavigationActions.Push('b');
-    state = NavigationReducer(state, action);
-
-    expect(state.get(0)).toBe('a');
-    expect(state.get(1)).toBe('b');
-    expect(state.size).toBe(2);
+    let state = NavigationReducer(
+      {
+        routes: ['a'],
+        index: 0,
+      },
+      NavigationActions.Push('b')
+    );
+    expect(state.routes[0]).toBe('a');
+    expect(state.routes[1]).toBe('b');
+    expect(state.routes.length).toBe(2);
     expect(state.index).toBe(1);
   });
 
   it('handles Pop', () => {
-    let state = new NavigationState(['a', 'b'], 1);
-    let action = new NavigationActions.Pop();
-    state = NavigationReducer(state, action);
-
-    expect(state.get(0)).toBe('a');
-    expect(state.size).toBe(1);
+    let state = NavigationReducer(
+      {
+        routes: ['a', 'b'],
+        index: 1,
+      },
+      NavigationActions.Pop()
+    );
+    expect(state.routes[0]).toBe('a');
+    expect(state.routes.length).toBe(1);
     expect(state.index).toBe(0);
 
-    action = new NavigationActions.Pop();
-    state = NavigationReducer(state, action);
+    // make sure Pop on an single-route state is a no-op
+    state = NavigationReducer(
+      state,
+      NavigationActions.Pop(),
+    );
 
-    expect(state.size).toBe(1);
+    expect(state.routes.length).toBe(1);
     expect(state.index).toBe(0);
   });
 
   it('handles JumpTo', () => {
-    let state = new NavigationState(['a', 'b', 'c'], 0);
-    let action = new NavigationActions.JumpTo('b');
-    state = NavigationReducer(state, action);
+    let state = NavigationReducer(
+      {
+        routes: ['a', 'b', 'c'],
+        index: 0,
+      },
+      NavigationActions.JumpTo('b')
+    );
 
-    expect(state.size).toBe(3);
+    expect(state.routes.length).toBe(3);
     expect(state.index).toBe(1);
 
-    action = new NavigationActions.JumpTo('c');
-    state = NavigationReducer(state, action);
+    state = NavigationReducer(
+      state,
+      NavigationActions.JumpTo('c')
+    );
 
-    expect(state.size).toBe(3);
+    expect(state.routes.length).toBe(3);
     expect(state.index).toBe(2);
   });
 
   it('handles Reset', () => {
-    let state = new NavigationState(['a', 'b'], 0);
-    let action = new NavigationActions.Reset(new NavigationState(['c', 'd'], 1));
-    state = NavigationReducer(state, action);
+    let state = NavigationReducer(
+      {
+        routes: ['a', 'b'],
+        index: 0,
+      },
+      NavigationActions.Reset(['c', 'd'], 1)
+    );
 
-    expect(state.get(0)).toBe('c');
-    expect(state.get(1)).toBe('d');
-    expect(state.size).toBe(2);
+    expect(state.routes[0]).toBe('c');
+    expect(state.routes[1]).toBe('d');
+    expect(state.routes.length).toBe(2);
     expect(state.index).toBe(1);
   });
 
 
-  it('handles OnRouteNavigationState Push', () => {
-    function makeObjectRoute(navState) {
-      return {
-        getNavigationState: () => navState,
-        setNavigationState: makeObjectRoute,
-      };
-    }
-    // Routes can expose a sub-state by implementing `get/setNavigationState`
-    let route1subStack = new NavigationState(['a'], 0);
-    let route1 = makeObjectRoute(route1subStack);
+  it('handles OnRouteKey Push', () => {
+    let state = {
+      routes: [
+        {
+          key: 'subState0',
+          routes: ['a'],
+          index: 0,
+        },
+        {
+          key: 'subState1',
+          routes: ['b'],
+          index: 0,
+        },
+      ],
+      index: 1,
+    };
 
-    // Or, navigation states can be directly used as child routes
-    let route2 = new NavigationState(['b'], 0);
+    state = NavigationReducer(
+      state,
+      NavigationActions.OnRouteKey('subState0', NavigationActions.Push('c'))
+    );
 
-    let state = new NavigationState([route1, route2], 1);
-
-    // this action should perform a push action on the sub-navigation state of route1
-    let action = new NavigationActions.OnRouteNavigationState(route1, new NavigationActions.Push('c'));
-    state = NavigationReducer(state, action);
-
-    expect(state.get(0).getNavigationState().get(0)).toBe('a');
-    expect(state.get(0).getNavigationState().get(1)).toBe('c');
-    expect(state.get(0).getNavigationState().size).toBe(2);
-    expect(state.get(0).getNavigationState().index).toBe(1);
-    expect(state.get(1).get(0)).toBe('b');
-    expect(state.get(1).size).toBe(1);
-    expect(state.get(1).index).toBe(0);
-    expect(state.size).toBe(2);
+    expect(state.routes[0].routes[0]).toBe('a');
+    expect(state.routes[0].routes[1]).toBe('c');
+    expect(state.routes[0].routes.length).toBe(2);
+    expect(state.routes[0].index).toBe(1);
+    expect(state.routes[1].routes[0]).toBe('b');
+    expect(state.routes[1].routes.length).toBe(1);
+    expect(state.routes[1].index).toBe(0);
+    expect(state.routes.length).toBe(2);
     expect(state.index).toBe(1);
   });
 });

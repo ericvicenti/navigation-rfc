@@ -12,7 +12,8 @@
 'use strict';
 
 var React = require('react-native');
-var NavigationContainer = require('./NavigationContainer');
+var NavigationContainer = require('NavigationContainer');
+var NavigationState = require('NavigationState');
 var {
   StyleSheet,
   View,
@@ -23,21 +24,21 @@ var NavigationView = React.createClass({
     return (
       <View
         style={this.props.style}>
-        {this.props.navigationState.mapToArray(this._renderRoute)}
+        {this.props.navigationState.routes.map(this._renderRoute)}
       </View>
     );
   },
-  _renderRoute: function(route, index, key) {
+  _renderRoute: function(route, index) {
     var isSelected = index === this.props.navigationState.index;
     return (
       <View
-        key={key}
+        key={NavigationState.getKey(route)}
         pointerEvents={isSelected ? 'auto' : 'none'}
         style={[
           styles.navView,
           {opacity: isSelected ? 1 : 0},
         ]}>
-        {this.props.renderRoute(route, index, key)}
+        {this.props.renderRoute(route, index)}
       </View>
     );
   },
