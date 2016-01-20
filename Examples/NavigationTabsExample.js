@@ -60,6 +60,7 @@ var NavigationTabsExample = React.createClass({
       <NavigationContainer.RootContainer
         initialState={{ routes: ['one', 'two', 'three'], index: 0 }}
         reducer={NavigationReducer}
+<<<<<<< HEAD
         persistenceKey="NAV_EXAMPLE_STATE_TABS"
         renderNavigator={(navigationState, onNavigation) => {
           if (!navigationState) { return null; }
@@ -88,6 +89,32 @@ var NavigationTabsExample = React.createClass({
             </View>
           );
         }}
+=======
+        renderNavigator={(navigationState, onNavigation) => (
+          <View style={styles.topView}>
+            <ExmpleTabPage
+              onExampleExit={this.props.onExampleExit}
+              // we don't need to pass onNavigation or navigationState here
+              // because ExampleTabPage is wrapped with NavigationContainer.create
+            />
+            <TabBarIOS style={styles.tabBar}>
+              {navigationState.mapToArray((route, index, key) => (
+                <TabBarIOS.Item
+                  title={route}
+                  icon={{uri: base64Icon, scale: 3}}
+                  key={key}
+                  selected={index === navigationState.index}
+                  onPress={this._handleTabPress.bind(this, onNavigation, route)}
+                  // This is a hack because we are abusing the nature of TabBarIOS
+                  // to handle scene switching seperately
+                >
+                  <View />
+                </TabBarIOS.Item>
+              ))}
+            </TabBarIOS>
+          </View>
+        )}
+>>>>>>> cea90f2b5dd4e1c5e875ad8ebef053c40221e941
       />
     );
   },

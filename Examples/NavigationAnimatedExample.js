@@ -20,10 +20,13 @@ var {
   NavigationCard,
   NavigationContainer,
   NavigationHeader,
+  NavigationHeaderTitle,
+  Platform,
   StyleSheet,
   ScrollView,
 } = React;
 var NavigationExampleRow = require('./NavigationExampleRow');
+var NavigationExampleBackButton = require('./NavigationExampleBackButton');
 
 class NavigationAnimatedExample extends React.Component {
   render() {
@@ -50,7 +53,13 @@ class NavigationAnimatedExample extends React.Component {
             navState={navState}
             position={position}
             layout={layout}
-            getTitle={route => route}
+            renderLeftComponent={(route, index) => {
+              if (index === 0) {
+                return null;
+              }
+              return <NavigationExampleBackButton onNavigation={onNavigation} />;
+            }}
+            renderTitleComponent={route => <NavigationHeaderTitle>{route}</NavigationHeaderTitle>}
           />
         )}
         renderScene={(route, index, navState, position, layout) => (
@@ -88,7 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginTop: 64
+    marginTop: Platform.OS === 'ios' ? 64 : 56,
   },
 });
 
