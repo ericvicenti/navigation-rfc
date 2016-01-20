@@ -68,7 +68,7 @@ var NavigationTabsExample = React.createClass({
             <ExmpleTabPage
               onExampleExit={this.props.onExampleExit}
               // we don't need to pass onNavigation or navigationState here
-              // because ExampleTabPage is wrapped with NavigationContainer.create 
+              // because ExampleTabPage is wrapped with NavigationContainer.create
             />
             <TabBarIOS style={styles.tabBar}>
               {navigationState.mapToArray((route, index, key) => (
