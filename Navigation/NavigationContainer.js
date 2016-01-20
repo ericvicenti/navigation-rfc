@@ -12,8 +12,7 @@
 'use strict';
 
 var React = require('react-native');
-var NavigationState = require('./NavigationState');
-var NavigationRootContainer = require('./NavigationRootContainer');
+var NavigationRootContainer = require('NavigationRootContainer');
 
 function createNavigationContainer(Component: React.Component): React.Component {
   class NavigationComponent extends React.Component {
@@ -41,11 +40,11 @@ function createNavigationContainer(Component: React.Component): React.Component 
   }
   NavigationComponent.contextTypes = {
     onNavigation: React.PropTypes.func,
-    navigationState: React.PropTypes.instanceOf(NavigationState),
+    navigationState: React.PropTypes.object,
   };
   NavigationComponent.childContextTypes = {
     onNavigation: React.PropTypes.func,
-    navigationState: React.PropTypes.instanceOf(NavigationState),
+    navigationState: React.PropTypes.object,
   };
   return NavigationComponent;
 }

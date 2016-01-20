@@ -7,49 +7,26 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule NavigationAnimatedView
- * @flow
+ * @flow-broken
  */
 'use strict';
 
-var NavigationState = require('./NavigationState');
-var NavigationContainer = require('./NavigationContainer');
+var Animated = require('Animated');
+var Map = require('Map');
+var NavigationState = require('NavigationState');
+var NavigationContainer = require('NavigationContainer');
 var React = require('react-native');
-var {
-  Animated,
-  View,
-} = React;
+var View = require('View');
 
-var immutable = require('immutable');
+var invariant = require('invariant');
 
-var {
-  Map,
-  Record,
-} = immutable;
+import type NavigationRoute from 'NavigationState';
 
-/**
- * Record that contains the information for the scene view.
- */
-var NavigationSceneRecord = Record({
-  /**
-   * The index of the route in the NavigationState.
-   */
-  index: -1,
-  /**
-   * The key for the scene view.
-   */
-  key: '',
-  /**
-   * The route for the scene.
-   */
-  route: null,
-
-  /**
-   * Whether the target scene for the route is stale.
-   * If `true`, the route is not in the current NavigationState while its
-   * target scene may remain in the view
-   */
-  stale: false,
-});
+type NavigationScene = {
+  index: number,
+  route: NavigationRoute,
+  isStale: ?boolean,
+};
 
 /**
  * Helper function to compare route keys (e.g. "9", "11").
@@ -66,11 +43,11 @@ function compareKey(one: string, two: string): number {
 }
 
 /**
- * Helper function to sort records based on their index and view key.
+ * Helper function to sort scenes based on their index and view key.
  */
-function compareRecords(
-  one: NavigationSceneRecord,
-  two: NavigationSceneRecord
+function compareScenes(
+  one: NavigationScene,
+  two: NavigationScene
 ): number {
   if (one.index > two.index) {
     return 1;
@@ -80,98 +57,97 @@ function compareRecords(
     return -1;
   }
 
-  return compareKey(one.key, two.key);
+  return compareKey(
+    NavigationState.getKey(one.route),
+    NavigationState.getKey(two.route)
+  );
 }
 
-class NavigationAnimatedView extends React.Component {
-  _position: Animated.Value;
-  _postionListener: ?string;
-  _lastHeight: number;
-  _lastWidth: number;
-  _onProgressChange: Function;
-
-  constructor(props) {
-    super(props);
-    this._onProgressChange = this._onProgressChange.bind(this);
-    this._position = new Animated.Value(this.props.navigationState.index);
-    this.state = {
+var NavigationAnimatedView = React.createClass({
+  propTypes: {
+    navigationState: React.PropTypes.object.isRequired,
+    renderScene: React.PropTypes.func.isRequired,
+  },
+  getInitialState: function() {
+    return {
       width: new Animated.Value(this._lastWidth),
       height: new Animated.Value(this._lastHeight),
-      records: new Map(),
+      position: new Animated.Value(this.props.navigationState.index),
+      scenes: new Map(),
     };
-  }
-  componentWillMount() {
+  },
+  componentWillMount: function() {
     this.setState({
-      records: this._reduceRecords(this.state.records, this.props.navigationState),
+      scenes: this._reduceScenes(this.state.scenes, this.props.navigationState),
     });
-  }
-  componentDidMount() {
-    this._postionListener = this._position.addListener(this._onProgressChange);
-  }
-  componentWillReceiveProps(nextProps) {
+  },
+  componentDidMount: function() {
+    this._postionListener = this.state.position.addListener(this._onProgressChange);
+  },
+  componentWillReceiveProps: function(nextProps) {
     if (nextProps.navigationState !== this.props.navigationState) {
       this.setState({
-        records: this._reduceRecords(this.state.records, nextProps.navigationState, this.props.navigationState),
+        scenes: this._reduceScenes(this.state.scenes, nextProps.navigationState, this.props.navigationState),
       });
     }
-  }
-  componentDidUpdate(lastProps) {
+  },
+  componentDidUpdate: function(lastProps) {
     if (lastProps.navigationState.index !== this.props.navigationState.index) {
       Animated.spring(
-        this._position,
+        this.state.position,
         {toValue: this.props.navigationState.index}
       ).start();
     }
-  }
-  componentWillUnmount() {
+  },
+  componentWillUnmount: function() {
     if (this._postionListener) {
-      this._position.removeListener(this._postionListener);
+      this.state.position.removeListener(this._postionListener);
       this._postionListener = null;
     }
-  }
-  _onProgressChange(data: Object): void {
+  },
+  _onProgressChange: function(data: Object): void {
     if (data.value !== this.props.navigationState.index) {
       return;
     }
-    this.state.records.forEach((record, key) => {
-      if (record.stale) {
-        this.setState({
-          records: this.state.records.remove(key),
-        });
+    this.state.scenes.forEach((scene, index) => {
+      if (scene.isStale) {
+        const scenes = this.state.scenes.slice();
+        scenes.splice(index, 1);
+        this.setState({ scenes, });
       }
     });
-  }
-  _reduceRecords(
-    records: Map,
-    nextStack: NavigationState,
-    lastStack: ?NavigationState
-  ): Map {
-    records = records.withMutations(map => {
-      if (lastStack) {
-        // routes to dismiss.
-        lastStack.subtract(nextStack).forEach(diff => {
-          var record = new NavigationSceneRecord({
-            route: diff.route,
-            index: diff.index,
-            key: diff.key,
-            stale: true,
-          });
-          map.set(record.key, record);
-        });
-      }
+  },
+  _reduceScenes: function(
+    scenes: Array<NavigationScene>,
+    nextState: NavigationState,
+    lastState: ?NavigationState
+  ): Array<NavigationScene> {
+    let nextScenes = nextState.routes.map((route, index) => {
+      return {
+        index,
+        route,
+      };
+    });
 
-      // routes to stay.
-      nextStack.forEach((route, index, key) => {
-        if (map.has(key)) {
-          return;
+    if (lastState) {
+      lastState.routes.forEach((route, index) => {
+        const key = NavigationState.getKey(route);
+        if (!NavigationState.get(nextState, key)) {
+          nextScenes.push({
+            index,
+            route,
+            isStale: true,
+          });
         }
-        var record = new NavigationSceneRecord({ route, index, key, });
-        map.set(record.key, record);
       });
-    });
-    records = records.sort(compareRecords);
-    return records;
-  }
+    }
+
+    console.log('BALAAA', nextScenes)
+
+    nextScenes = nextScenes.sort(compareScenes);
+
+    return nextScenes;
+  },
   render() {
     return (
       <View
@@ -183,39 +159,38 @@ class NavigationAnimatedView extends React.Component {
           this.state.width.setValue(width);
         }}
         style={this.props.style}>
-        {this.state.records.toArray().map(this._renderScene, this)}
+        {this.state.scenes.map(this._renderScene, this)}
         {this._renderOverlay(this._renderOverlay, this)}
       </View>
     );
-  }
-  _renderScene(sceneRecord) {
+  },
+  _getLayout: function() {
     const {height, width} = this.state;
-    return this.props.renderScene({
-      key: sceneRecord.key,
-      sceneRecord,
-      position: this._position,
+    return {
       height,
       width,
       initWidth: this._lastWidth,
       initHeight: this._lastHeight,
-    });
-  }
-  _renderOverlay() {
-    const {height, width} = this.state;
-    return this.props.renderOverlay({
-      position: this._position,
-      height,
-      width,
-      initWidth: this._lastWidth,
-      initHeight: this._lastHeight,
-    });
-  }
-}
-NavigationAnimatedView.propTypes = {
-  navigationState: React.PropTypes.instanceOf(NavigationState).isRequired,
-  renderScene: React.PropTypes.func.isRequired,
-};
+    };
+  },
+  _renderScene: function(scene: NavigationScene) {
+    return this.props.renderScene(
+      scene.route,
+      scene.index,
+      this.props.navigationState,
+      this.state.position,
+      this._getLayout()
+    );
+  },
+  _renderOverlay: function() {
+    return this.props.renderOverlay(
+      this.props.navigationState,
+      this.state.position,
+      this._getLayout()
+    );
+  },
+});
+
 NavigationAnimatedView = NavigationContainer.create(NavigationAnimatedView);
-NavigationAnimatedView.NavigationSceneRecord = NavigationSceneRecord;
 
 module.exports = NavigationAnimatedView;

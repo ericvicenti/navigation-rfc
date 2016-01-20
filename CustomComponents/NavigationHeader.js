@@ -50,7 +50,7 @@ class NavigationHeader extends React.Component {
         style={[
           styles.header,
         ]}>
-        {state.mapToArray(this._renderTitle.bind(this))}
+        {state.routes.map(this._renderTitle.bind(this))}
         {this._renderBackButton()}
       </Animated.View>
     );
@@ -65,10 +65,10 @@ class NavigationHeader extends React.Component {
       </TouchableOpacity>
     );
   }
-  _renderTitle(route, index, key) {
+  _renderTitle(route, index) {
     return (
       <Animated.Text
-        key={key}
+        key={NavigationState.getKey(route)}
         style={[
           styles.title,
           {
@@ -95,7 +95,7 @@ class NavigationHeader extends React.Component {
   }
 }
 NavigationHeader.propTypes = {
-  navigationState: React.PropTypes.instanceOf(NavigationState),
+  navigationState: React.PropTypes.object,
   onNavigation: React.PropTypes.func.isRequired,
   getTitle: React.PropTypes.func.isRequired,
 };
