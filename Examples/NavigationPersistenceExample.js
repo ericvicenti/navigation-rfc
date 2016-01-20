@@ -20,11 +20,14 @@ var {
   NavigationCard,
   NavigationContainer,
   NavigationHeader,
+  NavigationHeaderTitle,
   NavigationState,
+  Platform,
   ScrollView,
   StyleSheet,
 } = React;
 var NavigationExampleRow = require('./NavigationExampleRow');
+var NavigationExampleBackButton = require('./NavigationExampleBackButton');
 
 function stateToString(navState) {
   // demo some basic serialization that works for string routes.
@@ -63,7 +66,14 @@ const NavigationAnimatedExample = React.createClass({
         renderOverlay={(props) => (
           <NavigationHeader
             {...props}
-            getTitle={route => route}
+            renderLeftComponent={(route, index) => {
+              if (index === 0) {
+                return null;
+              }
+
+              return <NavigationExampleBackButton onNavigation={onNavigation} />;
+            }}
+            renderTitleComponent={route => <NavigationHeaderTitle>{route}</NavigationHeaderTitle>}
           />
         )}
         renderScene={(props) => (
@@ -71,7 +81,7 @@ const NavigationAnimatedExample = React.createClass({
             {...props}>
             <ScrollView style={styles.scrollView}>
               <NavigationExampleRow
-                text={navState.get(navState.index)}
+                text={props.sceneRecord.get('route')}
               />
               <NavigationExampleRow
                 text="Push!"
@@ -96,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    marginTop: 64
+    marginTop: Platform.OS === 'ios' ? 64 : 56,
   },
 });
 
