@@ -1,3 +1,4 @@
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -21,4 +22,4 @@ React.NavigationHeader = require('./CustomComponents/NavigationHeader');
 React.NavigationHeaderTitle = require('./CustomComponents/NavigationHeaderTitle');
 React.NavigationCard = require('./CustomComponents/NavigationCard');
 
-AppRegistry.registerComponent('NavigationExamples', () => require('./Examples/NavigationExampleMenu'));
+AppRegistry.registerComponent('NavigationExampleApp', () => require('./Examples/NavigationExampleMenu'));
