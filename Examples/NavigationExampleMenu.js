@@ -16,6 +16,7 @@
 var React = require('react-native');
 var {
   AsyncStorage,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
   menu: {
     backgroundColor: '#E9E9EF',
     flex: 1,
-    marginTop: 20,
+    marginTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
 

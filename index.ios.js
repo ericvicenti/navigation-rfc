@@ -18,6 +18,7 @@ React.NavigationReducer = require('./Navigation/NavigationReducer');
 React.NavigationContainer = require('./Navigation/NavigationContainer');
 
 React.NavigationHeader = require('./CustomComponents/NavigationHeader');
+React.NavigationHeaderTitle = require('./CustomComponents/NavigationHeaderTitle');
 React.NavigationCard = require('./CustomComponents/NavigationCard');
 
 AppRegistry.registerComponent('NavigationExamples', () => require('./Examples/NavigationExampleMenu'));

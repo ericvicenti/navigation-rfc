@@ -67,7 +67,7 @@ const NavigationRootContainer = React.createClass({
           navState: this.props.stringToRoute(storedString),
         });
       });
-    }  
+    }
   },
   getChildContext: function(): Object {
     return {

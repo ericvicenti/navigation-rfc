@@ -18,6 +18,7 @@ var {
   NavigationActions,
   NavigationContainer,
   NavigationReducer,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   topView: {
     backgroundColor: '#E9E9EF',
     flex: 1,
-    paddingTop: 30,
+    paddingTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
 
