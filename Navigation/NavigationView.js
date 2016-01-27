@@ -20,6 +20,9 @@ var {
 } = React;
 
 var NavigationView = React.createClass({
+  propTypes: {
+    navigationState: NavigationState.NavigationStateShape.isRequired,
+  },
   render: function() {
     return (
       <View

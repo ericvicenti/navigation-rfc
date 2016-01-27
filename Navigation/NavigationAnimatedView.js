@@ -65,7 +65,7 @@ function compareScenes(
 
 var NavigationAnimatedView = React.createClass({
   propTypes: {
-    navigationState: React.PropTypes.object.isRequired,
+    navigationState: NavigationState.NavigationStateShape.isRequired,
     renderScene: React.PropTypes.func.isRequired,
     renderOverlay: React.PropTypes.func,
   },
