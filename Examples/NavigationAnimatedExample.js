@@ -71,7 +71,7 @@ class NavigationAnimatedExample extends React.Component {
             navState={navState}
             position={position}
             layout={layout}>
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
               <NavigationExampleRow
                 text={navState.routes[navState.index]}
               />
