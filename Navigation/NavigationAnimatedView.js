@@ -174,13 +174,15 @@ var NavigationAnimatedView = React.createClass({
     };
   },
   _renderScene: function(scene: NavigationScene) {
-    return this.props.renderScene(
+    let rendered = this.props.renderScene(
       scene.route,
       scene.index,
       this.props.navigationState,
       this.state.position,
       this._getLayout()
     );
+    invariant(rendered.key, 'The result of NavigationAnimatedView renderScene prop must have a key.');
+    return rendered;
   },
   _renderOverlay: function() {
     return this.props.renderOverlay(
