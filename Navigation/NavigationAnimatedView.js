@@ -65,8 +65,9 @@ function compareScenes(
 
 var NavigationAnimatedView = React.createClass({
   propTypes: {
-    navigationState: React.PropTypes.object.isRequired,
+    navigationState: NavigationState.NavigationStateShape.isRequired,
     renderScene: React.PropTypes.func.isRequired,
+    renderOverlay: React.PropTypes.func,
   },
   getInitialState: function() {
     return {
@@ -142,8 +143,6 @@ var NavigationAnimatedView = React.createClass({
       });
     }
 
-    console.log('BALAAA', nextScenes)
-
     nextScenes = nextScenes.sort(compareScenes);
 
     return nextScenes;
@@ -160,7 +159,7 @@ var NavigationAnimatedView = React.createClass({
         }}
         style={this.props.style}>
         {this.state.scenes.map(this._renderScene, this)}
-        {this._renderOverlay(this._renderOverlay, this)}
+        {this.props.renderOverlay && this._renderOverlay(this._renderOverlay, this)}
       </View>
     );
   },

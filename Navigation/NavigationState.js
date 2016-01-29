@@ -12,12 +12,18 @@
 'use strict';
 
 const invariant = require('invariant');
+var React = require('react-native');
 
 export type NavigationRoute = string | {
   key: string;
   index: ?number;
   routes: ?Array<NavigationRoute>;
 };
+
+export const NavigationStateShape = React.PropTypes.shape({
+  routes: React.PropTypes.array.isRequired,
+  index: React.PropTypes.number.isRequired,
+});
 
 export function getKey(navState: NavigationRoute): string {
   if (typeof navState === 'string') {
@@ -136,4 +142,3 @@ export function replaceAtIndex(navState: NavigationRoute, index: number, newRout
     routes,
   };
 }
-
