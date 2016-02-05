@@ -1,6 +1,6 @@
 # NavigationExperimental
 
-A new Navigation system for react native. Focuses on the following improvements over <Navigator />:
+A new Navigation system for react native. Focuses on the following improvements over `<Navigator />`:
 
 - Single-directional data flow, using reducers to manipulate top-level state object
 - Navigation logic and routing must be independent from view logic to allow for a variety of native and js-based navigation views
