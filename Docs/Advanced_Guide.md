@@ -1,3 +1,0 @@
-## Advanced Guide
-
-Coming Soon
