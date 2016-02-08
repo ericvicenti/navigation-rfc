@@ -21,8 +21,7 @@ NavigationExperimental has recently been moved from here to the open source RN r
 
 ### These Docs currently out of date by about a month! Please look at the react-native repo for the current API!
 
-- [Navigation Landscape](Docs/Navigation.md)
-- Advanced Guide (Coming Soon)
+- [Navigation Landscape](Docs/NavigationOverview.md)
 - [Reducer and Actions](Docs/Reducer_Actions.md)
 - [Containers](Docs/Containers.md)
 - [AnimatedView](Docs/AnimatedView.md)
