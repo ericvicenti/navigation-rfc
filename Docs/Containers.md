@@ -9,8 +9,7 @@ If you are using alternative redux providers, you may not need `NavigationContai
 The developer can set the initial navigation state and define how to render the application based on the current state:
 
 ```
-<NavigationContainer.RootContainer
-  initialState={new NavigationState(0, ['First Route'])}
+<NavigationExperimental.RootContainer
   renderNavigator={(navigationState) => (
     <Text>Currently at {navigationState.get(navigationState.index)}</Text>
 ```
