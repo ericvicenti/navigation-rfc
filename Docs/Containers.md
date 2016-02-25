@@ -2,7 +2,7 @@
 
 We provide a default top-level component to maintain the state of your navigation and handle persistence.
 
-If you are using full-blown redux providers, you will probably not need `NavigationContainer`.
+If you are using redux or flux, you will probably not need `NavigationContainer`. You can use your existing stores and providers.
 
 ## NavigationRootContainer
 
