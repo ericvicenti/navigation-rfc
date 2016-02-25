@@ -5,40 +5,6 @@ There are many ways to handle navigation in React Native. This document goes ove
 ## NavigationExperimental
 We tentatively support adoption of the new navigation API because it allows developers to easily reason about the navigation of their app. It enables mixed use of native and JS navigation views, and greatly increases the customizability of JS-driven animations and gestures.
 
-### Navigation State
-The entire navigation state of your app can be modeled with NavigationStates. A `NavigationState` is an object with a `key` and some optional arbitrary data:
-
-```javascript
-const myState = {
-  key: 'myPage0',
-  myType: 'ExamplePage',
-  myParams: {foo: 'bar'},
-}'
-```
-
-A `NavigationParentState` contains a set of children navigation states and has an index which refers to a particular child.
-
-```javascript
-const myState = {
-  key: 'myAppTabs',
-  children: [
-    {key: 'home'},
-    {key: 'notifs'},
-    {key: 'settings'},
-  ],
-  index: 1, // points to the 'notifs' tab
-}'
-```
-
-
-### Actions and Reducers
-A reducer is a function that returns a new state based on a previous state and an action that you are taking on it. A navigation reducer is simply a reducer that can transform the NavigationState that is used to model your nav state.
-
-### Animations
-[NavigationAnimatedView](AnimatedView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
-
-NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
-
 ## Navigator - Legacy
 Originally released alongside React Native, `<Navigator>` is a JS implementation of an animated navigation view with a customizable header. 
 
