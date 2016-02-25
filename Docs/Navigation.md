@@ -1,8 +1,39 @@
 # NavigationExperimental
 
-## Introduction
+## Navigation State
 
+The entire navigation state of your app can be modeled with NavigationStates. A `NavigationState` is an object with a `key` and some optional arbitrary data:
 
+```javascript
+const myState = {
+  key: 'myPage0',
+  myType: 'ExamplePage',
+  myParams: {foo: 'bar'},
+}'
+```
+
+A `NavigationParentState` contains a set of children navigation states and has an index which refers to a particular child.
+
+```javascript
+const myState = {
+  key: 'myAppTabs',
+  children: [
+    {key: 'home'},
+    {key: 'notifs'},
+    {key: 'settings'},
+  ],
+  index: 1, // points to the 'notifs' tab
+}'
+```
+
+The navigation state types are available in `NavigationStateUtils`, along with a variety of utility functions which can be used to make changes to `NavigationParentState`s
+
+### Actions and Reducers
+
+### Animations
+[NavigationAnimatedView](AnimatedView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
+
+NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
 
 ## Containers
 
@@ -47,6 +78,8 @@ ExampleComponent = NavigationContainer.create(ExampleComponent);
 If `onNavigate` is actually passed to the container as a prop, it will override the handler for the contained component and for all sub-containers.
 
 ## Reducers
+
+A navigation reducer is a function that returns the current state for a given previous state and an action that is being taken on it.
 
 ### Find Reducer
 
