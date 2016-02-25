@@ -28,13 +28,6 @@ const myState = {
 
 The navigation state types are available in `NavigationStateUtils`, along with a variety of utility functions which can be used to make changes to `NavigationParentState`s
 
-### Actions and Reducers
-
-### Animations
-[NavigationAnimatedView](AnimatedView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
-
-NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
-
 ## Containers
 
 We provide a default top-level component to maintain the state of your navigation and handle persistence.
@@ -92,9 +85,13 @@ A navigation reducer is a function that returns the current state for a given pr
 
 ### NavigationView
 
-
+A simple view that will render a scene for the currently presented sub-state. The most common use-case is for tabs, where no transition is needed.
 
 ### NavigationAnimatedView
+
+[NavigationAnimatedView](AnimatedView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
+
+NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
 
 ### NavigationCardStack
 
