@@ -42,7 +42,6 @@ only work on the one platform. If multiple of these stateful navigation componen
 - Scene animations and gestures are difficult to customize
   - Gestures are handled by the Navigator and cannot be customised on a per-scene basis
   - Animation customization is obscure because it predates the Animated library
-- Extensive API makes it completely customizable from JavaScript.
 - Works on iOS and Android.
 - Includes a simple navigation bar component similar to the default `NavigatorIOS` bar: `Navigator.NavigationBar`, and another with breadcrumbs called `Navigator.BreadcrumbNavigationBar`. See the UIExplorer demo to try them out and see how to use them.
   - Animations are less refined than Apple's, which you get from `NavigatorIOS`.
