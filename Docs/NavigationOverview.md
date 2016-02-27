@@ -1,18 +1,64 @@
-# Navigation Landscape
+# Navigator Comparison
 
-There are many ways to handle navigation in React Native. This document goes over the various built-in options
+The differences between [Navigator](docs/navigator.html)
+and [NavigatorIOS](docs/navigatorios.html) have been a common
+source of confusion for newcomers. Facebook is transitioning from `Navigator` to `NavigationExperimental`, which will be the supported navigation library going forward.
+
+NavigationExperimental is often referred to as "the new navigator", but it is actually a new approach to navigation logic that allows ANY view to act as a navigation view. It includes a pre-built component for managing scene animations called `NavigationAnimatedView`. The views within can each define their own gestures and animations. There are pre-built scene and overlay components that are meant to look consistent with platform conventions.
+
+`Navigator` and `NavigatorIOS` are both stateful components that allow you to
+manage the navigation in your app between various "scenes" (another word
+for screens). They manage a route stack and allow you to pop, push, and
+replace states. In this way, [they are similar to the html5 history
+API](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history).
+The primary distinction between the two is that `NavigatorIOS` leverages
+the iOS
+[UINavigationController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationController_Class/)
+class, and `Navigator` re-implements that functionality entirely in
+JavaScript as a React component. A corollary of this is that `Navigator`
+is be compatible with Android and iOS, whereas `NavigatorIOS` will
+only work on the one platform. If multiple of these stateful navigation components are used in an app, it can become tricky to coordinate navigation transitions between them.
+
 
 ## NavigationExperimental
-We tentatively support adoption of the new navigation API because it allows developers to easily reason about the navigation of their app. It enables mixed use of native and JS navigation views, and greatly increases the customizability of JS-driven animations and gestures.
 
-## Navigator - Legacy
-Originally released alongside React Native, `<Navigator>` is a JS implementation of an animated navigation view with a customizable header. 
+- NavigationRootContainer allows navigation state to be stored at the top-level of the app
+  - Uses a reducer to declaratively set up transitions in navigation state
+  - Can save state to disk to persist navigation state over refreshes or app updates
+  - Listens to Linking for url opening, and BackAndroid for easy back button support
+- NavigationReducer contains pre-built reducers to manage transitions in navigation state
+  - Reducers can be combined with eachother to set up advanced navigation logic
+- The navigation logic can work with any view
+- `NavigationAnimatedView` is the component that can be used to manage animations between a set of scenes, and can be used to replace a `Navigator` or `NavigatorIOS` component.
+  - Each scene can be totally custom and manage its own animations and gestures
+  - Can have an overlay/header that can be syncronized with the animations of the scenes
+- `NavigationCard` and `NavigationHeader` are available as pre-built scenes and overlays which can be used with `NavigationAnimatedView`
 
-Navigator has a stateful API, which goes against the React philosophy of single directional data flow. Instead of defining the current navigation state, Navigator asks the developer to define the initial set of routes, and provides a way to mutate them. In complicated apps with several nested navigators, this can be tedious to manage.
 
-The Navigator animation code predates the Animated library, so customization is obscure and complicated. Additionally, the gesture logic is tightly integrated with the Navigator component, which makes it impossible to customize the gestures. 
+## Navigator
 
-## NavigatorIOS - Needs Support
-A component that bridges to a native iOS navigation controller. While it allows developers to use the native header and back-swipe gesture, they can not be very well customized.
+- Facebook is dropping support for Navigator and will focus on NavigationExperimental from now on
+- Owns navigations state and has an imperitive API, which goes against the React philosophy of single-directional data flow
+- Scene animations and gestures are difficult to customize
+  - Gestures are handled by the Navigator and cannot be customised on a per-scene basis
+  - Animation customization is obscure because it predates the Animated library
+- Extensive API makes it completely customizable from JavaScript.
+- Works on iOS and Android.
+- Includes a simple navigation bar component similar to the default `NavigatorIOS` bar: `Navigator.NavigationBar`, and another with breadcrumbs called `Navigator.BreadcrumbNavigationBar`. See the UIExplorer demo to try them out and see how to use them.
+  - Animations are less refined than Apple's, which you get from `NavigatorIOS`.
+- You can provide your own navigation bar by passing it through the `navigationBar` prop.
 
-NavigatorIOS also suffers from a stateful API similar to Navigator. Because NavigatorIOS is not widely used at Facebook, it is maintained by the community. Contributors are welcome to switch it to a declaritive API that can be used with the Navigation library.
+
+## NavigatorIOS
+
+- Has an imperitive API that does not play nice with the rest of the app.
+- Small, limited API makes it much less customizable than `Navigator` or `NavigationStackView`
+- Development belongs to open-source community - not used by the React Native team on their apps.
+  - A result of this is that there is currently a backlog of unresolved bugs, nobody who uses this has stepped up to take ownership for it yet.
+  - If the community refactors it to be declarative, it will work nicely with `NavigationExperimental`
+- Wraps UIKit, so it works exactly the same as it would on another native app. Lives in Objective-C and JavaScript.
+  - Consequently, you get the animations and behavior that Apple has developed.
+- iOS only.
+- Includes a navigation bar by default; this navigation bar is not a React Native view component and the style can only be slightly modified.
+
+For most non-trivial apps, you will want to use `NavigationExperimental` - it won't be long before you run into issues when trying to do anything complex with `NavigatorIOS`.
