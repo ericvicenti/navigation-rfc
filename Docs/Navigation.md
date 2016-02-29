@@ -95,6 +95,38 @@ NavigationCard and NavigationHeader are the included implementations of scenes a
 
 ### NavigationCardStack
 
+A component that wraps `NavigationAnimatedView` and automatically renders a `NavigationCard` for each scene. Similar to the legacy `Navigator` because the animations and gestures are built-in.
+
+Usage:
+
+```javascript
+render() {
+  return (
+    <NavigationCardStack
+      style={styles.main}
+      renderScene={props =>
+        <MyPetView
+          name={props.navigationState.key}
+          species={props.navigationState.species}
+        />
+      }
+      renderOverlay={props => <NavigationHeader {...props} />}
+      navigationState={{
+        key: 'MyPetStack',
+        index: 2,
+        children: {
+          {key: 'Pluto', species: 'dog'},
+          {key: 'Snoopy', species: 'dog'},
+          {key: 'Garfield', species: 'cat'},
+        }
+      }}
+    />
+  );
+}
+```
+
+[See the working example code in UIExplorer](https://github.com/facebook/react-native/blob/master/Examples/UIExplorer/NavigationExperimental/NavigationCardStackExample.js)
+
 ### NavigationCard
 
 ### NavigationHeader
