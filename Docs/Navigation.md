@@ -93,6 +93,41 @@ A simple view that will render a scene for the currently presented sub-state. Th
 
 NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
 
+### NavigationCard
+
+```
+<NavigationAnimatedView
+  navigationState={navigationState}
+  renderScene={(props) => (
+    <NavigationCard
+      key={props.navigationState.key}
+      index={props.index}
+      navigationState={props.navigationParentState}
+      position={props.position}
+      layout={props.layout}>
+      <MyInnerView info={props.navigationState} />
+    </NavigationCard>
+  )}
+/>
+```
+
+
+### NavigationHeader
+
+```
+<NavigationAnimatedView
+  navigationState={navigationState}
+  renderOverlay={(props) => (
+    <NavigationHeader
+      navigationState={props.navigationParentState}
+      position={props.position}
+      getTitle={state => state.key}
+    />
+  )}
+  renderScene={this._renderScene}
+/>
+```
+
 ### NavigationCardStack
 
 A component that wraps `NavigationAnimatedView` and automatically renders a `NavigationCard` for each scene. Similar to the legacy `Navigator` because the animations and gestures are built-in.
@@ -126,7 +161,3 @@ render() {
 ```
 
 [See the working example code in UIExplorer](https://github.com/facebook/react-native/blob/master/Examples/UIExplorer/NavigationExperimental/NavigationCardStackExample.js)
-
-### NavigationCard
-
-### NavigationHeader
