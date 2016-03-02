@@ -72,14 +72,95 @@ If `onNavigate` is actually passed to the container as a prop, it will override 
 
 ## Reducers
 
-A navigation reducer is a function that returns the current state for a given previous state and an action that is being taken on it.
+A navigation reducer is an action handler that returns the current navigation state. When calling navigation reducers, you provide an optional previous state, and a navigation action with a `type` string.
 
-### Find Reducer
+```
+let state = MyReducer(null, { type: 'InitialAction' });
+> {
+    key: 'Root',
+    index: 0,
+    children: [
+      {key: 'Home'},
+    ]
+  }
+
+state = MyReducer(state, { type: 'PushPerson', name: 'Christopher' });
+> {
+    key: 'Root',
+    index: 1,
+    children: [
+      {key: 'Home'},
+      {key: 'Person0', name: 'Christopher'},
+    ]
+  }
+```
 
 ### Stack Reducer
 
+A common type of navigation logic is a 'stack', which can be handled by the stack reducer:
+
+```javascript
+const MyReducer = NavigationStackReducer({
+  // First, define the initial parent state that will be used if there was no previous state.
+  initialState: {
+    key: 'Root',
+    index: 0,
+    children: [
+      {key: 'Home'},
+    ]
+  },
+  getPushedReducerForAction: (action) => {
+    if (action.type === 'PushPerson') {
+      // We need to push some additional state, that will be defined by this reducer:
+      return () => ({
+        key: 'Person'+(i++),
+        name: action.name,
+      });
+    }
+    // In this case we do not need to push, so our reducer for this action is nothing
+    return null;
+  },
+});
+
+let state = MyReducer(null, { type: 'InitAction' });
+> {
+    key: 'Root',
+    index: 0,
+    children: [
+      {key: 'Home'},
+    ]
+  }
+
+state = MyReducer(state, { type: 'PushPerson', name: 'Christopher' });
+> {
+    key: 'Root',
+    index: 1,
+    children: [
+      {key: 'Home'},
+      {key: 'Person0', name: 'Christopher'},
+    ]
+  }
+
+// The back action can be used to pop:
+state = MyReducer(state, NavigationRootContainer.getBackAction());
+> {
+    key: 'Root',
+    index: 0,
+    children: [
+      {key: 'Home'},
+    ]
+  }
+```
+
+Usage of the stack reducer can also include sub-reducers, which will require you to implement `getReducerForState`. This will return a sub-reducer for a given sub-state. The sub-reducer for the active sub-state will be used.
+
 ### Tabs Reducer
 
+Tabs reducer allows you to have several sub-reducers, with one 'active' one. For each action that is sent to the tabs reducer, it will first attempt to use the active sub-reducer. If the reducer does not return a new sub-state, then the other reducers will get a chance to handle it. If a different tab reducer does handle it, the tabs reducer will apply the new sub-state and switch the active tab.
+
+### Find Reducer
+
+A common pattern with reducers is to combine several reducers, and stop when one reducer has returned a new state. The find reducer takes an array of reducers and returns a reducer that will iterate through each one of them until the state has changed. If none of them provide a new state, the find reducer will return the default state.
 
 ## Views
 
