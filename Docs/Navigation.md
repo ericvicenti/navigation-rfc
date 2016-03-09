@@ -50,7 +50,7 @@ It also provides a handler for navigation actions, and allows the reducer to be 
 
 ### NavigationContainer.create
 
-It can be very tedious to pass the `onNavigate` prop around throughout your entire application. To aleviate this, we have provided a higher-order "container" component that you can use to provide components with this prop, so long as they are rendered under a `NavigationRootContainer`:
+It can be very tedious to pass the `onNavigate` prop around throughout your entire application. To alleviate this, we have provided a higher-order "container" component that you can use to provide components with this prop, so long as they are rendered under a `NavigationRootContainer`:
 
 ```
 <NavigationRootContainer
