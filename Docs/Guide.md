@@ -11,8 +11,8 @@ Our view can be used like this, where we pass in a game state, and listen to eve
 ```javascript
 <GameBoard
   game={'b1_a0_a1'}
-  onTurn{(row, col) => {}}
-  onReset{() => {}}
+  onTurn={(row, col) => {}}
+  onReset={() => {}}
 />
 ```
 
