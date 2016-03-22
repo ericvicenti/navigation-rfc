@@ -27,7 +27,7 @@ only work on the one platform. If multiple of these stateful navigation componen
   - Can save state to disk to persist navigation state over refreshes or app updates
   - Listens to Linking for url opening, and BackAndroid for easy back button support
 - NavigationReducer contains pre-built reducers to manage transitions in navigation state
-  - Reducers can be combined with eachother to set up advanced navigation logic
+  - Reducers can be combined with each other to set up advanced navigation logic
 - The navigation logic can work with any view
 - `NavigationAnimatedView` is the component that can be used to manage animations between a set of scenes, and can be used to replace a `Navigator` or `NavigatorIOS` component.
   - Each scene can be totally custom and manage its own animations and gestures
