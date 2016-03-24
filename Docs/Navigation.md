@@ -176,20 +176,28 @@ NavigationCard and NavigationHeader are the included implementations of scenes a
 
 ### NavigationCard
 
+NavigationCard is basically a Animated.View with customized styles and gesture handling. You can use it to render the naviagtion scene. 
+
+NavigationCard can be easily be used with the `renderScene` prop of NavigationAnimatedView. For instance, define a function `renderCard` which renders a NavigationCard.
+
 ```
 <NavigationAnimatedView
   navigationState={navigationState}
-  renderScene={(props) => (
-    <NavigationCard
-      key={props.navigationState.key}
-      index={props.index}
-      navigationState={props.navigationParentState}
-      position={props.position}
-      layout={props.layout}>
-      <MyInnerView info={props.navigationState} />
-    </NavigationCard>
-  )}
+  renderScene={renderCard}
 />
+```
+
+```
+function renderCard(props: NavigationSceneRendererProps) {
+  <NavigationCard
+    {...props}
+    renderScene={renderScene}
+  />
+}
+
+function renderScene(props: NavigationSceneRendererProps) {
+  return <MyInnerView info={props.navigationState} />;
+}
 ```
 
 
