@@ -64,7 +64,39 @@ However, it quickly becomes complicated to maintain independent methods for ever
   }
 ```
 
+Our reducer would then look like this:
 
+```
+function AppReducer(lastState, action) {
+  let state = lastState;
+  if (!state) {
+    state = {
+      scenes: [
+        {key: 'home'}
+      ],
+    };
+  }
+  if (action.type === 'back' && state.scenes.length > 1) {
+    return {
+      scenes: state.scenes.slice(0, this.state.scenes.length - 1),
+    };
+  }
+  if (action.type === 'openChat') {
+    return {
+      scenes: [
+        ...state.scenes,
+        {
+          type: 'chat',
+          key: action.id
+        }
+      ],
+    };
+  }
+  return state;
+}
+```
+
+Now, we can easily implement our navigation methods as the following:
 
 ```
   openChat(id) {
@@ -75,11 +107,24 @@ However, it quickly becomes complicated to maintain independent methods for ever
   }
 ```
 
-Our reducer would then look like this:
+And now that we have implemented `this.dispatch`, we can give access to allow sub-components to dispatch actions:
 
 ```
-function AppReducer(state, action) {
-  if (!state) {
+  render() {
+    const scene = this.state.scenes[this.state.scenes.length - 1];
+    if (scene.key === 'home') {
+      return 
+        <HomeView
+          dispatch={this.dispatch}
+        />;
+    }
+    if (scene.type === 'chat') {
+      return
+        <ChatView
+          id={scene.key}
+          dispatch={this.dispatch}
+        />;
+    }
+    return null;
   }
-}
 ```
