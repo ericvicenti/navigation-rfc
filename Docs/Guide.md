@@ -1,96 +1,85 @@
 # Navigation Guide
 
-Let's learn about Navigation in React Native by building a simple tic-tac-toe app!
+Lets build the navigation for a simple chat app. First, we should decide on the structure of our application state. Because we can have a stack of screens in our app, we will store the list of scenes in an array:
 
-We can model the state of our game with a simple string. If you assume "O" goes first, the game board for `b1_a0_a1` would look like this, and it would be "X"'s turn:
-
-IMAGE_HERE!
-
-Our view can be used like this, where we pass in a game state, and listen to events for when the user makes a turn or resets the game.
-
-```javascript
-<GameBoard
-  game={'b1_a0_a1'}
-  onTurn={(row, col) => {}}
-  onReset={() => {}}
-/>
+```
+class MyApp extends React.Component {
+  constructor(props) {
+    this.state = {
+      scenes: [
+        {key: 'home'}, // this represents the application home screen
+      ],
+    };
+  }
 ```
 
-### Navigation Containers
+For our render function, we want to display the topmost/current scene in the stack.
 
-We want to be able to persist the state of the game when the user quits and resumes the app, or when the developer refreshes the code. To accomplish this, we are going to use one stateful container for our app that can save the state to disk. This can be thought of as a Redux provider with a built-in store. If you're already using Redux or flux, then you won't need this container.
-
-```javascript
-<NavigationExperimental.RootContainer
-
-  // Outputs the new nav state for a previous state and action
-  reducer={GameReducer}
-  
-  // Render the application as a function of navigation state:
-  renderNavigation{(state, onNavigate) => (
-    <GameBoard
-      game={state}
-      onTurn={(row, col) => {
-        onNavigate({ type: 'TURN', row, col });
-      }}
-      onReset{() => {
-        onNavigate({ type: 'RESET' });
-      }}
-    />
-  )}
-
-  // Provide this string to tell the container to store the state
-  // to disk, and under what name.
-  persistenceKey="TicTacToeGameStorageKey"
-
-/>
+```
+  render() {
+    const scene = this.state.scenes[this.state.scenes.length - 1];
+    if (scene.key === 'home') {
+      return <HomeView />;
+    }
+    if (scene.type === 'chat') {
+      return <ChatView id={scene.key} />;
+    }
+    return null;
+  }
 ```
 
-The `renderNavigation` example could be simplified by providing `onNavigate` directly to the child:
+To open a chat screen, we could add a method called `openChat`:
 
-```javascript
-  renderNavigation{(state, onNavigate) => (
-    <GameBoard
-      game={state}
-      onNavigate={onNavigate}
-    />
-  )}
+```
+  openChat(id) {
+    this.setState({
+      scenes: [
+        ...this.state.scenes,
+        { type: 'chat', key: id }
+      ],
+    });
+  }
 ```
 
-Sometimes it can be tedious to pass the `onNavigate` function to every component in your application that needs the ability to link.
+And if we wanted to go back, we could implement a back method like this:
 
-With this decorator, `GameBoard` will always have access to the closest `onNavigate` prop, as long as it is rendered inside a `RootContainer`:
-
-```javascript
-// In the GameBoard component module:
-GameBoard = NavigationExperimental.Container.create(GameBoard);
-
-// In your app component:
-<NavigationExperimental.RootContainer
-  // GameBoard will still have access to this.props.onNavigate
-  renderNavigation={state => <GameBoard game={state} />}
-  {...etc}
-/>
+```
+  goBack() {
+    if (this.state.scenes.length > 1) {
+      this.setState({
+        scenes: this.state.scenes.slice(0, this.state.scenes.length - 1),
+      });
+    }
+  }
 ```
 
-### Reducers
+However, it quickly becomes complicated to maintain independent methods for every navigation action in your app. To fix this, we can delegate all of the navigation logic to a reducer:
 
-The above example refers to a `GameReducer`, which is responsible for the "business logic" of the game. A reducer describes the latest state, based on the previous state and an action. The state may be undefined for the initial action.
+```
+  constructor() {
+    this.state = AppReducer(null, { type: 'init' }),
+  }
+  dispatch(action) {
+    this.setState(AppReducer(this.state, action));
+  }
+```
 
-Our reducer might look like this:
 
-```javascript
-function GameReducer(game = '', action): string {
-  switch (action.type)
-    case 'RESET':
-      return '';
-    case 'TURN':
-      // would return 'a0_b1' for playTurn('a0', 1, 1)
-      return playTurn(game, action.col, action.row);
-    default:
-      return game;
+
+```
+  openChat(id) {
+    this.dispatch({ type: 'openChat', id });
+  }
+  goBack() {
+    this.dispatch({ type: 'back' });
+  }
+```
+
+Our reducer would then look like this:
+
+```
+function AppReducer(state, action) {
+  if (!state) {
   }
 }
 ```
-
-To see the example code up until this point, check out MISSING_REF
