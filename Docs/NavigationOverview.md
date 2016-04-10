@@ -38,7 +38,7 @@ only work on the one platform. If multiple of these stateful navigation componen
 ## Navigator
 
 - Facebook is dropping support for Navigator and will focus on NavigationExperimental from now on
-- Owns navigations state and has an imperitive API, which goes against the React philosophy of single-directional data flow
+- Owns navigations state and has an imperative API, which goes against the React philosophy of single-directional data flow
 - Scene animations and gestures are difficult to customize
   - Gestures are handled by the Navigator and cannot be customised on a per-scene basis
   - Animation customization is obscure because it predates the Animated library
@@ -50,7 +50,7 @@ only work on the one platform. If multiple of these stateful navigation componen
 
 ## NavigatorIOS
 
-- Has an imperitive API that does not play nice with the rest of the app.
+- Has an imperative API that does not play nice with the rest of the app.
 - Small, limited API makes it much less customizable than `Navigator` or `NavigationStackView`
 - Development belongs to open-source community - not used by the React Native team on their apps.
   - A result of this is that there is currently a backlog of unresolved bugs, nobody who uses this has stepped up to take ownership for it yet.
