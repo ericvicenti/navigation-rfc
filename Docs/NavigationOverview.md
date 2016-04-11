@@ -16,7 +16,7 @@ the iOS
 [UINavigationController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationController_Class/)
 class, and `Navigator` re-implements that functionality entirely in
 JavaScript as a React component. A corollary of this is that `Navigator`
-is be compatible with Android and iOS, whereas `NavigatorIOS` will
+is to be compatible with Android and iOS, whereas `NavigatorIOS` will
 only work on the one platform. If multiple of these stateful navigation components are used in an app, it can become tricky to coordinate navigation transitions between them.
 
 
