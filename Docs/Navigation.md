@@ -4,17 +4,17 @@
 
 The entire navigation state of your app can be modeled with NavigationStates. A `NavigationState` is an object with a `key` and some optional arbitrary data:
 
-```javascript
+```js
 const myState = {
   key: 'myPage0',
   myType: 'ExamplePage',
   myParams: {foo: 'bar'},
-}'
+}
 ```
 
 A `NavigationParentState` contains a set of children navigation states and has an index which refers to a particular child.
 
-```javascript
+```js
 const myState = {
   key: 'myAppTabs',
   children: [
@@ -23,7 +23,7 @@ const myState = {
     {key: 'settings'},
   ],
   index: 1, // points to the 'notifs' tab
-}'
+}
 ```
 
 The navigation state types are available in `NavigationStateUtils`, along with a variety of utility functions which can be used to make changes to `NavigationParentState`s
@@ -38,7 +38,7 @@ If you are using redux or flux, you will probably not need `NavigationContainer`
 
 The developer can set the reducer for the root container, which will contain all of the navigation logic for the app. Our navigation reducers will take in the last navigation state, an action that we need to handle, and it will output a new navigation state for our app. To get the initial state, the reducer will be called without a previous state or an action.
 
-```
+```js
 <NavigationRootContainer
   reducer={MyReducer}
   renderNavigation={(navigationState, onNavigate) => (
@@ -52,7 +52,7 @@ It also provides a handler for navigation actions, and allows the reducer to be 
 
 It can be very tedious to pass the `onNavigate` prop around throughout your entire application. To alleviate this, we have provided a higher-order "container" component that you can use to provide components with this prop, so long as they are rendered under a `NavigationRootContainer`:
 
-```
+```js
 <NavigationRootContainer
   reducer={MyReducer}
   renderNavigation={(navigationState) => <ExampleComponent />}
@@ -74,7 +74,7 @@ If `onNavigate` is actually passed to the container as a prop, it will override 
 
 A navigation reducer is an action handler that returns the current navigation state. When calling navigation reducers, you provide an optional previous state, and a navigation action with a `type` string.
 
-```
+```js
 let state = MyReducer(null, { type: 'InitialAction' });
 > {
     key: 'Root',
@@ -99,7 +99,7 @@ state = MyReducer(state, { type: 'PushPerson', name: 'Christopher' });
 
 A common type of navigation logic is a 'stack', which can be handled by the stack reducer:
 
-```javascript
+```js
 const MyReducer = NavigationStackReducer({
   // First, define the initial parent state that will be used if there was no previous state.
   initialState: {
@@ -176,7 +176,7 @@ NavigationCard and NavigationHeader are the included implementations of scenes a
 
 ### NavigationCard
 
-```
+```js
 <NavigationAnimatedView
   navigationState={navigationState}
   renderScene={(props) => (
@@ -195,7 +195,7 @@ NavigationCard and NavigationHeader are the included implementations of scenes a
 
 ### NavigationHeader
 
-```
+```js
 <NavigationAnimatedView
   navigationState={navigationState}
   renderOverlay={(props) => (
@@ -215,7 +215,7 @@ A component that wraps `NavigationAnimatedView` and automatically renders a `Nav
 
 Usage:
 
-```javascript
+```js
 render() {
   return (
     <NavigationCardStack
