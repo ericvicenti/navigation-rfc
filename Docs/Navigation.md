@@ -9,7 +9,7 @@ const myState = {
   key: 'myPage0',
   myType: 'ExamplePage',
   myParams: {foo: 'bar'},
-}'
+}
 ```
 
 A `NavigationParentState` contains a set of children navigation states and has an index which refers to a particular child.
@@ -23,7 +23,7 @@ const myState = {
     {key: 'settings'},
   ],
   index: 1, // points to the 'notifs' tab
-}'
+}
 ```
 
 The navigation state types are available in `NavigationStateUtils`, along with a variety of utility functions which can be used to make changes to `NavigationParentState`s
