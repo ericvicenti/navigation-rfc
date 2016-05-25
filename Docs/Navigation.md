@@ -12,12 +12,12 @@ const myState = {
 }
 ```
 
-A `NavigationParentState` contains a set of children navigation states and has an index which refers to a particular child.
+A `NavigationParentState` contains a set of routes and has an index which refers to a particular route.
 
 ```js
 const myState = {
   key: 'myAppTabs',
-  children: [
+  routes: [
     {key: 'home'},
     {key: 'notifs'},
     {key: 'settings'},
@@ -42,7 +42,7 @@ The developer can set the reducer for the root container, which will contain all
 <NavigationRootContainer
   reducer={MyReducer}
   renderNavigation={(navigationState, onNavigate) => (
-    <Text>Currently at {navigationState.children[navigationState.index]}</Text>
+    <Text>Currently at {navigationState.routes[navigationState.index]}</Text>
 ```
 
 It also provides a handler for navigation actions, and allows the reducer to be customised:
@@ -79,7 +79,7 @@ let state = MyReducer(null, { type: 'InitialAction' });
 > {
     key: 'Root',
     index: 0,
-    children: [
+    routes: [
       {key: 'Home'},
     ]
   }
@@ -88,7 +88,7 @@ state = MyReducer(state, { type: 'PushPerson', name: 'Christopher' });
 > {
     key: 'Root',
     index: 1,
-    children: [
+    routes: [
       {key: 'Home'},
       {key: 'Person0', name: 'Christopher'},
     ]
@@ -105,7 +105,7 @@ const MyReducer = NavigationStackReducer({
   initialState: {
     key: 'Root',
     index: 0,
-    children: [
+    routes: [
       {key: 'Home'},
     ]
   },
@@ -126,7 +126,7 @@ let state = MyReducer(null, { type: 'InitAction' });
 > {
     key: 'Root',
     index: 0,
-    children: [
+    routes: [
       {key: 'Home'},
     ]
   }
@@ -135,7 +135,7 @@ state = MyReducer(state, { type: 'PushPerson', name: 'Christopher' });
 > {
     key: 'Root',
     index: 1,
-    children: [
+    routes: [
       {key: 'Home'},
       {key: 'Person0', name: 'Christopher'},
     ]
@@ -146,7 +146,7 @@ state = MyReducer(state, NavigationRootContainer.getBackAction());
 > {
     key: 'Root',
     index: 0,
-    children: [
+    routes: [
       {key: 'Home'},
     ]
   }
@@ -230,7 +230,7 @@ render() {
       navigationState={{
         key: 'MyPetStack',
         index: 2,
-        children: {
+        routes: {
           {key: 'Pluto', species: 'dog'},
           {key: 'Snoopy', species: 'dog'},
           {key: 'Garfield', species: 'cat'},
