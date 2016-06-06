@@ -230,11 +230,11 @@ render() {
       navigationState={{
         key: 'MyPetStack',
         index: 2,
-        routes: {
+        routes: [
           {key: 'Pluto', species: 'dog'},
           {key: 'Snoopy', species: 'dog'},
           {key: 'Garfield', species: 'cat'},
-        }
+        ]
       }}
     />
   );
