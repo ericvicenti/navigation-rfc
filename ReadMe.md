@@ -14,7 +14,7 @@ NavigationExperimental has recently been moved from here to the open source RN r
 
 - Core Utilities and Components: https://github.com/facebook/react-native/tree/master/Libraries/NavigationExperimental
 - Animated Card and Header: https://github.com/facebook/react-native/tree/master/Libraries/CustomComponents/NavigationExperimental
-- Examples: https://github.com/facebook/react-native/tree/master/Examples/UIExplorer/NavigationExperimental
+- Examples: https://github.com/facebook/react-native/tree/master/Examples/UIExplorer/js/NavigationExperimental
 
 
 ## Docs
