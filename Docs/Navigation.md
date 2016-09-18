@@ -198,7 +198,7 @@ NavigationCard and NavigationHeader are the included implementations of scenes a
 ```js
 <NavigationAnimatedView
   navigationState={navigationState}
-  renderOverlay={(props) => (
+  renderHeader={(props) => (
     <NavigationHeader
       navigationState={props.navigationParentState}
       position={props.position}
@@ -226,7 +226,7 @@ render() {
           species={props.navigationState.species}
         />
       }
-      renderOverlay={props => <NavigationHeader {...props} />}
+      renderHeader={props => <NavigationHeader {...props} />}
       navigationState={{
         key: 'MyPetStack',
         index: 2,
