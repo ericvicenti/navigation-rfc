@@ -4,7 +4,7 @@ The differences between [Navigator](docs/navigator.html)
 and [NavigatorIOS](docs/navigatorios.html) have been a common
 source of confusion for newcomers. Facebook is transitioning from `Navigator` to `NavigationExperimental`, which will be the supported navigation library going forward.
 
-NavigationExperimental is often referred to as "the new navigator", but it is actually a new approach to navigation logic that allows ANY view to act as a navigation view. It includes a pre-built component for managing scene animations called `NavigationAnimatedView`. The views within can each define their own gestures and animations. There are pre-built scene and overlay components that are meant to look consistent with platform conventions.
+NavigationExperimental is often referred to as "the new navigator", but it is actually a new approach to navigation logic that allows ANY view to act as a navigation view. It includes a pre-built component for managing scene animations called `NavigationTransitioner`. The views within can each define their own gestures and animations. There are pre-built scene and overlay components that are meant to look consistent with platform conventions.
 
 `Navigator` and `NavigatorIOS` are both stateful components that allow you to
 manage the navigation in your app between various "scenes" (another word
@@ -29,10 +29,10 @@ only work on the one platform. If multiple of these stateful navigation componen
 - NavigationReducer contains pre-built reducers to manage transitions in navigation state
   - Reducers can be combined with each other to set up advanced navigation logic
 - The navigation logic can work with any view
-- `NavigationAnimatedView` is the component that can be used to manage animations between a set of scenes, and can be used to replace a `Navigator` or `NavigatorIOS` component.
+- `NavigationTransitioner` is the component that can be used to manage animations between a set of scenes, and can be used to replace a `Navigator` or `NavigatorIOS` component.
   - Each scene can be totally custom and manage its own animations and gestures
   - Can have an overlay/header that can be syncronized with the animations of the scenes
-- `NavigationCard` and `NavigationHeader` are available as pre-built scenes and overlays which can be used with `NavigationAnimatedView`
+- `NavigationCard` and `NavigationHeader` are available as pre-built scenes and overlays which can be used with `NavigationTransitioner`
 
 
 ## Navigator
