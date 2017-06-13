@@ -1,6 +1,10 @@
-# NavigationExperimental
+# Note: Use React Navigation now instead
 
-A new Navigation system for react native. Focuses on the following improvements over `<Navigator />`:
+This project was developed in early 2016 and has since matured and combined with Expo's Ex-Navigation project to form a new effort: [React Navigation](https://reactnavigation.org). Please use that instead, and collaborate with the community to improve it!
+
+## DEPRECATED NavigationExperimental
+
+This was an 2016 RFC for a new Navigation system for react native, with focus on the following improvements over `<Navigator />`:
 
 - Single-directional data flow, using reducers to manipulate top-level state object
 - Navigation logic and routing must be independent from view logic to allow for a variety of native and js-based navigation views
