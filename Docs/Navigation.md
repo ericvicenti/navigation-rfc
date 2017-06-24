@@ -172,41 +172,90 @@ A simple view that will render a scene for the currently presented sub-state. Th
 
 [NavigationAnimatedView](AnimatedView.md) is the spiritual successor to Navigator. In addition to adopting a declaritive API, it uses the Animated library to delegate animations and gestures to the scenes. 
 
-NavigationCard and NavigationHeader are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
+Basically, NavigationAnimatedView acts as a controlled component that takes the `navigationState` and redners the scenes and header (as overlay).
+
+```
+<NavigationAnimatedView
+  navigationState={navigationState}
+  renderScene={renderScene}
+  renderOverlay={renderOverlay}
+/>
+```
+
+The interface of the functions `renderScene` and `renderOverlay` should be defines as the following snippets:
+
+```
+function renderOverlay(props: NavigationSceneRendererProps): ReactElement {
+  return <View><Text>overlay {props.scene.navigationState.key}</Text></View>
+}
+
+function renderScene(props: NavigationSceneRendererProps): ReactElement {
+  return <View><Text>scene {props.scene.navigationState.key}</Text></View>
+}
+```
+
+Note that the param `props` is prepared by the NavigationAnimatedView as read-only object that contains the information we need to render the scenes, headers.
+
+For your convenience, we have prepared the components NavigationCard and NavigationHeader that are the included implementations of scenes and overlays for NavigationAnimatedView, which are intended to look similar to platform conventions.
 
 ### NavigationCard
 
 ```js
 <NavigationAnimatedView
   navigationState={navigationState}
-  renderScene={(props) => (
-    <NavigationCard
-      key={props.navigationState.key}
-      index={props.index}
-      navigationState={props.navigationParentState}
-      position={props.position}
-      layout={props.layout}>
-      <MyInnerView info={props.navigationState} />
-    </NavigationCard>
-  )}
+  renderScene={renderCard}
 />
 ```
 
+and the scene renderer
+
+```
+function renderCard(props: NavigationSceneRendererProps): ReactElement {
+  return (
+    <NavigationCard
+       {...props}
+       renderScene={renderScene}
+    />
+  );
+}
+
+function renderScene(props: NavigationSceneRendererProps): ReactElement {
+  return <View><Text>scene {props.scene.navigationState.key}</Text></View>
+}
+```
+
+By default, NavigationCard has built-in gesture and animation. If you'd like to use customized geesture or animation style, you can simply do this:
+
+```
+function renderCard(props: NavigationSceneRendererProps): ReactElement {
+  return (
+    <NavigationCard
+       {...props}
+       style={NavigationCardStackStyleInterpolator.forHorizontal(props)}
+       pandlers={NavigationLinearPanResponder.forHorizontal(props)}
+       renderScene={renderScene}
+    />
+  );
+}
+```
+
+The prop `style` can be the interpolated animation style, and the prop `pandlers` can be a object that makes to the pan responder handlers.
 
 ### NavigationHeader
 
 ```js
 <NavigationAnimatedView
   navigationState={navigationState}
-  renderOverlay={(props) => (
-    <NavigationHeader
-      navigationState={props.navigationParentState}
-      position={props.position}
-      getTitle={state => state.key}
-    />
-  )}
-  renderScene={this._renderScene}
+  renderOverlay={renderOverlay}
 />
+```
+
+and the header renderer
+
+```
+function renderOverlay(props: NavigationSceneRendererProps): ReactElement {
+  return <NavigationHeader {...props} />
+}
 ```
 
 ### NavigationCardStack
